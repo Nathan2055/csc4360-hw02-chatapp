@@ -15,8 +15,6 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(title: 'Firebase Auth Demo', home: MyHomePage());
@@ -24,7 +22,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key});
+  MyHomePage({Key? key}) : super(key: key);
   final String title = 'Firebase Auth Demo';
   final Duration delay = const Duration(seconds: 1);
   final AuthService authService = AuthService();

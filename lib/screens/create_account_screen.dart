@@ -32,15 +32,6 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     String emailAddress = _usernameController.text;
     String password = _passwordController.text;
 
-    try {
-      await widget.authService.createAccount(emailAddress, password);
-    } on FirebaseAuthException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('You have successfully deleted a product'),
-        ),
-      );
-    }
     await widget.authService.createAccount(emailAddress, password);
 
     print('are we logged in?');
