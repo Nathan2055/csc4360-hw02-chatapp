@@ -1,4 +1,4 @@
-import 'package:firebaseauth/authservice.dart';
+import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatefulWidget {
