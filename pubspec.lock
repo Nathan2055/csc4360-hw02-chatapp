@@ -686,7 +686,7 @@ packages:
     source: hosted
     version: "1.2.2"
   test:
-    dependency: "direct overridden"
+    dependency: "direct dev"
     description:
       name: test
       sha256: "8f0eb7fa76b7d05a4f3707e0dbd581babef5b0915ca508b757cf15d0cabb56cb"
@@ -694,7 +694,7 @@ packages:
     source: hosted
     version: "1.27.0"
   test_api:
-    dependency: "direct overridden"
+    dependency: "direct dev"
     description:
       name: test_api
       sha256: "19a78f63e83d3a61f00826d09bc2f60e191bf3504183c001262be6ac75589fb8"
