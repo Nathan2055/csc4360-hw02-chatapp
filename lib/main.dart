@@ -40,8 +40,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   // TextStyle for titles
-  //TextStyle titleTextStyle2 = Theme.of(context)
-  //TextStyle titleTextStyle = ThemeData().textTheme.titleLarge
+  TextStyle titleTextStyle = const TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w500,
+    height: 28.0,
+  );
 
   // Tracking variables for which interface is selected
   bool loginSelected = false;
@@ -49,7 +52,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Decide which interface to display based on selection
   Scaffold renderAuthInterface() {
-    //var textstyle = Theme.of(context)
     // If somehow both options get selected, reset them both
     if (loginSelected && createAccountSelected) {
       setState(() {
@@ -65,23 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               // If the login screen is selected, render the login screen
-              //loginSelected ? const Text('Log In', style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w500, height: 28.0,),) : Container(),
               loginSelected
-                  ? const Text(
-                      'Log In',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    )
+                  ? Text('Log In', style: titleTextStyle)
                   : Container(),
-
-              loginSelected ? AppBar(title: const Text('Log In')) : Container(),
               loginSelected ? LoginScreen(widget.authService) : Container(),
 
               // If the create account screen is selected, render the create account screen
               createAccountSelected
-                  ? AppBar(title: const Text('Create Account'))
+                  ? Text('Create Account', style: titleTextStyle)
                   : Container(),
               createAccountSelected
                   ? CreateAccountScreen(widget.authService)
@@ -105,7 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             spacing: 24.0,
             children: [
-              AppBar(title: const Text('Firebase Chat App')),
+              Text('Firebase Chat App', style: titleTextStyle),
               ElevatedButton(
                 onPressed: () {
                   setState(() {
@@ -165,7 +158,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.all(64.0),
                   child: Column(
                     children: [
-                      AppBar(title: const Text('Something went wrong')),
+                      Text('Something went wrong', style: titleTextStyle),
                     ],
                   ),
                 ),
@@ -180,7 +173,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(64.0),
                   child: Column(
-                    children: [AppBar(title: const Text('Loading...'))],
+                    children: [Text('Loading...', style: titleTextStyle)],
                   ),
                 ),
               ),
