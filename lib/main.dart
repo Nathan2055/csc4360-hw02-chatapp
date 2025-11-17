@@ -39,12 +39,17 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // TextStyle for titles
+  //TextStyle titleTextStyle2 = Theme.of(context)
+  //TextStyle titleTextStyle = ThemeData().textTheme.titleLarge
+
   // Tracking variables for which interface is selected
   bool loginSelected = false;
   bool createAccountSelected = false;
 
   // Decide which interface to display based on selection
   Scaffold renderAuthInterface() {
+    //var textstyle = Theme.of(context)
     // If somehow both options get selected, reset them both
     if (loginSelected && createAccountSelected) {
       setState(() {
@@ -60,6 +65,17 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               // If the login screen is selected, render the login screen
+              loginSelected
+                  ? const Text(
+                      'Log In',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w500,
+                        height: 28.0,
+                      ),
+                    )
+                  : Container(),
+
               loginSelected ? AppBar(title: const Text('Log In')) : Container(),
               loginSelected ? LoginScreen(widget.authService) : Container(),
 
