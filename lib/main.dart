@@ -21,15 +21,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: 'Firebase Auth Demo', home: MyHomePage());
+    return MaterialApp(
+      title: 'Firebase Auth Demo',
+      home: MyHomePage(authService),
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({super.key});
+  const MyHomePage(this.authService, {super.key});
   final String title = 'Firebase Auth Demo';
   final Duration delay = const Duration(seconds: 1);
-  final AuthService authService = AuthService();
+  final AuthService authService;
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
