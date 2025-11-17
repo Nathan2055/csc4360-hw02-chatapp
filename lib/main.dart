@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool createAccountSelected = false;
 
   // Decide which interface to display based on selection
-  Column renderAuthInterface() {
+  Scaffold renderAuthInterface() {
     // If somehow both options get selected, reset them both
     if (loginSelected && createAccountSelected) {
       setState(() {
@@ -48,50 +48,64 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
 
-    return Column(
-      children: [
-        // If the login screen is selected, render the login screen
-        loginSelected ? AppBar(title: const Text('Log In')) : Container(),
-        loginSelected ? LoginScreen() : Container(),
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(64.0),
+          child: Column(
+            children: [
+              // If the login screen is selected, render the login screen
+              loginSelected ? AppBar(title: const Text('Log In')) : Container(),
+              loginSelected ? LoginScreen() : Container(),
 
-        // If the create account screen is selected, render the create account screen
-        createAccountSelected
-            ? AppBar(title: const Text('Create Account'))
-            : Container(),
-        createAccountSelected ? CreateAccountScreen() : Container(),
-      ],
+              // If the create account screen is selected, render the create account screen
+              createAccountSelected
+                  ? AppBar(title: const Text('Create Account'))
+                  : Container(),
+              createAccountSelected ? CreateAccountScreen() : Container(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
   // Starting interface to select between logging in and creating account
-  Column renderStartingScreen() {
-    return Column(
-      spacing: 24.0,
-      children: [
-        AppBar(title: const Text('Firebase Chat App')),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              loginSelected = true;
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('Login')],
+  Scaffold renderStartingScreen() {
+    return Scaffold(
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(64.0),
+          child: Column(
+            spacing: 24.0,
+            children: [
+              AppBar(title: const Text('Firebase Chat App')),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    loginSelected = true;
+                  });
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text('Login')],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    createAccountSelected = true;
+                  });
+                },
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text('Create Account')],
+                ),
+              ),
+            ],
           ),
         ),
-        ElevatedButton(
-          onPressed: () {
-            setState(() {
-              createAccountSelected = true;
-            });
-          },
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('Create Account')],
-          ),
-        ),
-      ],
+      ),
     );
   }
 
@@ -119,44 +133,7 @@ class _MyHomePageState extends State<MyHomePage> {
             } else {
               return renderAuthInterface();
             }
-
-            return Scaffold(
-              body: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(64.0),
-                  child: Column(
-                    children: [
-                      AppBar(title: const Text('Log In')),
-                      LoginScreen(),
-                      AppBar(title: const Text('Create Account')),
-                      CreateAccountScreen(),
-                    ],
-                  ),
-                ),
-              ),
-            );
           }
-
-          /*
-          // Display this if the user is not logged in yet
-          if (!snapshot.hasData) {
-            return Scaffold(
-              body: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(64.0),
-                  child: Column(
-                    children: [
-                      AppBar(title: const Text('Log In')),
-                      LoginScreen(),
-                      AppBar(title: const Text('Create Account')),
-                      CreateAccountScreen(),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-          */
 
           // Display this once the user is logged in
           return ProfileScreen(emailAddress: widget.authService.getEmail());
