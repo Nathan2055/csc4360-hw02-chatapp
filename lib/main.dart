@@ -34,6 +34,63 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  // Tracking variables for which interface is selected
+  bool loginSelected = false;
+  bool createAccountSelected = false;
+
+  // Decide which interface to display based on selection
+  Column renderAuthInterface() {
+    // If somehow both options get selected, reset them
+    if (loginSelected && createAccountSelected) {
+      setState(() {
+        loginSelected = false;
+        createAccountSelected = false;
+      });
+    }
+
+    return Column(
+      children: [
+        //_isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+        // If login screen is selected, render the login screen
+        loginSelected ? AppBar(title: const Text('Log In')) : Container(),
+        loginSelected ? LoginScreen() : Container(),
+
+        // If create account screen is selected, render the create account screen
+        createAccountSelected
+            ? AppBar(title: const Text('Create Account'))
+            : Container(),
+        createAccountSelected ? CreateAccountScreen() : Container(),
+      ],
+    );
+  }
+
+  // Starting interface to select between logging in and creating account
+  Column startingScreen() {
+    return Column();
+    /*
+    // If somehow both options get selected, reset them
+    if (loginSelected && createAccountSelected) {
+      setState(() {
+        loginSelected = false;
+        createAccountSelected = false;
+      });
+    }
+
+    return Column(
+      children: [
+        //_isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+        // If login screen is selected, render the login screen
+        loginSelected ? AppBar(title: const Text('Log In')) : Container(),
+        loginSelected ? LoginScreen() : Container(),
+
+        // If create account screen is selected, render the create account screen
+        createAccountSelected ? AppBar(title: const Text('Create Account')) : Container(),
+        createAccountSelected ? CreateAccountScreen() : Container(),
+      ],
+    );
+    */
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
