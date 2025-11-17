@@ -4,12 +4,11 @@ import 'package:chatapp/models/chat_entry.dart';
 
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String collectionName = 'products';
 
-  Future<String> addChatEntry(ChatEntry chatEntry) async {
+  Future<String> addChatEntry(String collection, ChatEntry chatEntry) async {
     try {
       var docRef = await _firestore
-          .collection(collectionName)
+          .collection(collection)
           .add(chatEntry.toMap());
       print('Chat entry created');
       String id = docRef.id;
@@ -21,9 +20,9 @@ class FirestoreService {
     }
   }
 
-  Stream<List<ChatEntry>> getChatEntryStream() {
+  Stream<List<ChatEntry>> getChatEntryStream(String collection) {
     return _firestore
-        .collection(collectionName)
+        .collection(collection)
         .snapshots()
         .map(
           (snapshot) =>
@@ -31,14 +30,16 @@ class FirestoreService {
         );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getRawChatEntryStream() {
-    return _firestore.collection(collectionName).snapshots();
+  Stream<QuerySnapshot<Map<String, dynamic>>> getRawChatEntryStream(
+    String collection,
+  ) {
+    return _firestore.collection(collection).snapshots();
   }
 
-  Future<void> updateChatEntry(ChatEntry chatEntry) async {
+  Future<void> updateChatEntry(String collection, ChatEntry chatEntry) async {
     try {
       await _firestore
-          .collection(collectionName)
+          .collection(collection)
           .doc(chatEntry.id)
           .update(chatEntry.toMap());
       debugPrint('ChatEntry updated');
@@ -47,27 +48,38 @@ class FirestoreService {
     }
   }
 
-  Future<void> updateChatEntryByID(String id, String name, double price) async {
+  Future<void> updateChatEntryByID(
+    String collection,
+    String id,
+    String name,
+    double price,
+  ) async {
     try {
-      await _firestore.doc(id).update({"name": name, "price": price});
+      await _firestore.collection(collection).doc(id).update({
+        "name": name,
+        "price": price,
+      });
     } catch (e) {
       debugPrint('Error updating item: $e');
     }
   }
 
-  Future<void> deleteChatEntry(String id) async {
+  Future<void> deleteChatEntry(String collection, String id) async {
     try {
-      await _firestore.collection(collectionName).doc(id).delete();
+      await _firestore.collection(collection).doc(id).delete();
     } catch (e) {
       debugPrint('Error deleting item: $e');
     }
   }
 
   // Firestore query for search
-  Future<Stream<QuerySnapshot<Object?>>?> searchProducts(String query) async {
+  Future<Stream<QuerySnapshot<Object?>>?> searchProducts(
+    String collection,
+    String query,
+  ) async {
     try {
       var result = await _firestore
-          .collection(collectionName)
+          .collection(collection)
           .where('name', isGreaterThanOrEqualTo: query)
           .where('name', isLessThanOrEqualTo: '$query\uf8ff')
           .snapshots();
@@ -80,12 +92,13 @@ class FirestoreService {
 
   // Firestore query for price filter
   Future<Stream<QuerySnapshot<Object?>>?> filterProductsByPrice(
+    String collection,
     double minPrice,
     double maxPrice,
   ) async {
     try {
       var result = await _firestore
-          .collection(collectionName)
+          .collection(collection)
           .where('price', isGreaterThanOrEqualTo: minPrice)
           .where('price', isLessThanOrEqualTo: maxPrice)
           .snapshots();
