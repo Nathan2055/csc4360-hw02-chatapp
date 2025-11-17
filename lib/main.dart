@@ -66,16 +66,24 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               // If the login screen is selected, render the login screen
               loginSelected
-                  ? Text('Log In', style: titleTextStyle)
+                  ? Column(
+                      spacing: 24.0,
+                      children: [
+                        Text('Log In', style: titleTextStyle),
+                        LoginScreen(widget.authService),
+                      ],
+                    )
                   : Container(),
-              loginSelected ? LoginScreen(widget.authService) : Container(),
 
               // If the create account screen is selected, render the create account screen
               createAccountSelected
-                  ? Text('Create Account', style: titleTextStyle)
-                  : Container(),
-              createAccountSelected
-                  ? CreateAccountScreen(widget.authService)
+                  ? Column(
+                      spacing: 24.0,
+                      children: [
+                        Text('Create Account', style: titleTextStyle),
+                        CreateAccountScreen(widget.authService),
+                      ],
+                    )
                   : Container(),
 
               SizedBox(height: 16.0),
