@@ -95,7 +95,6 @@ class BoardCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 16),
       ],
     );
   }
