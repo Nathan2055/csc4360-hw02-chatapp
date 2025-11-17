@@ -15,7 +15,9 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -56,13 +58,15 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               // If the login screen is selected, render the login screen
               loginSelected ? AppBar(title: const Text('Log In')) : Container(),
-              loginSelected ? LoginScreen() : Container(),
+              loginSelected ? LoginScreen(widget.authService) : Container(),
 
               // If the create account screen is selected, render the create account screen
               createAccountSelected
                   ? AppBar(title: const Text('Create Account'))
                   : Container(),
-              createAccountSelected ? CreateAccountScreen() : Container(),
+              createAccountSelected
+                  ? CreateAccountScreen(widget.authService)
+                  : Container(),
 
               SizedBox(height: 16.0),
               backButton(),

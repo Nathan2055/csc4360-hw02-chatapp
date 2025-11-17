@@ -2,9 +2,9 @@ import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  LoginScreen({super.key});
+  const LoginScreen(this.authService, {super.key});
 
-  final AuthService authService = AuthService();
+  final AuthService authService;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

@@ -2,9 +2,9 @@ import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
 
 class CreateAccountScreen extends StatefulWidget {
-  CreateAccountScreen({super.key});
+  const CreateAccountScreen(this.authService, {super.key});
 
-  final AuthService authService = AuthService();
+  final AuthService authService;
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
