@@ -118,12 +118,32 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           // Display this if an error occurs
           if (snapshot.hasError) {
-            return const Text('Something went wrong');
+            return Scaffold(
+              body: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(64.0),
+                  child: Column(
+                    children: [
+                      AppBar(title: const Text('Something went wrong')),
+                    ],
+                  ),
+                ),
+              ),
+            );
           }
 
           // Display this while connecting to Firebase
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading...");
+            return Scaffold(
+              body: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(64.0),
+                  child: Column(
+                    children: [AppBar(title: const Text('Loading...'))],
+                  ),
+                ),
+              ),
+            );
           }
 
           // Display this if the user is not logged in yet
