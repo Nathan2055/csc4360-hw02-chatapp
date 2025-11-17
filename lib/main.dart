@@ -65,13 +65,13 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
             children: [
               // If the login screen is selected, render the login screen
+              //loginSelected ? const Text('Log In', style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w500, height: 28.0,),) : Container(),
               loginSelected
                   ? const Text(
                       'Log In',
                       style: TextStyle(
                         fontSize: 22.0,
-                        fontWeight: FontWeight.w500,
-                        height: 28.0,
+                        fontWeight: FontWeight.w400,
                       ),
                     )
                   : Container(),
