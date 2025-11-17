@@ -1,43 +1,37 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+// Representation of one chat posting
+// Includes an id, a message, a username, and a DateTime of posting
 class ChatEntry {
   final String id;
   final String message;
-  final int quantity;
-  final double price;
-  final String category;
+  final String username;
   final DateTime createdAt;
 
   ChatEntry({
-    required this.message,
-    this.quantity = 1,
-    required this.price,
-    this.category = "default",
-    required this.createdAt,
     required this.id,
+    required this.message,
+    required this.username,
+    required this.createdAt,
   });
 
-  //convert item to a firestore-friendly map data
+  // Convert the item to a Firestore-compatible map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'name': message,
-      'quantity': quantity,
-      'price': price,
-      'category': category,
+      'message': message,
+      'username': username,
       'createdAt': createdAt,
     };
   }
 
-  //create an item from a firestore document snapshot
+  // Create an item from a Firestore document snapshot
   factory ChatEntry.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return ChatEntry(
       id: snapshot.id,
-      message: data['name'],
-      quantity: data['quantity'],
-      price: data['price'],
-      category: data['category'],
+      message: data['message'],
+      username: data['username'],
       createdAt: data['createdAt'].toDate(),
     );
   }
