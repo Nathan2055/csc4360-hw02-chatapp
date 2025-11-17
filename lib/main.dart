@@ -63,6 +63,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   ? AppBar(title: const Text('Create Account'))
                   : Container(),
               createAccountSelected ? CreateAccountScreen() : Container(),
+
+              SizedBox(height: 16.0),
+              backButton(),
             ],
           ),
         ),
@@ -105,6 +108,21 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  ElevatedButton backButton() {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          loginSelected = false;
+          createAccountSelected = false;
+        });
+      },
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [Text('Back')],
       ),
     );
   }
