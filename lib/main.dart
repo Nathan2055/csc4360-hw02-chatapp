@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // Decide which interface to display based on selection
   Column renderAuthInterface() {
-    // If somehow both options get selected, reset them
+    // If somehow both options get selected, reset them both
     if (loginSelected && createAccountSelected) {
       setState(() {
         loginSelected = false;
@@ -50,12 +50,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Column(
       children: [
-        //_isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-        // If login screen is selected, render the login screen
+        // If the login screen is selected, render the login screen
         loginSelected ? AppBar(title: const Text('Log In')) : Container(),
         loginSelected ? LoginScreen() : Container(),
 
-        // If create account screen is selected, render the create account screen
+        // If the create account screen is selected, render the create account screen
         createAccountSelected
             ? AppBar(title: const Text('Create Account'))
             : Container(),
@@ -65,30 +64,35 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   // Starting interface to select between logging in and creating account
-  Column startingScreen() {
-    return Column();
-    /*
-    // If somehow both options get selected, reset them
-    if (loginSelected && createAccountSelected) {
-      setState(() {
-        loginSelected = false;
-        createAccountSelected = false;
-      });
-    }
-
+  Column renderStartingScreen() {
     return Column(
+      spacing: 24.0,
       children: [
-        //_isPasswordVisible ? Icons.visibility : Icons.visibility_off,
-        // If login screen is selected, render the login screen
-        loginSelected ? AppBar(title: const Text('Log In')) : Container(),
-        loginSelected ? LoginScreen() : Container(),
-
-        // If create account screen is selected, render the create account screen
-        createAccountSelected ? AppBar(title: const Text('Create Account')) : Container(),
-        createAccountSelected ? CreateAccountScreen() : Container(),
+        AppBar(title: const Text('Firebase Chat App')),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              loginSelected = true;
+            });
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('Login')],
+          ),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            setState(() {
+              createAccountSelected = true;
+            });
+          },
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('Create Account')],
+          ),
+        ),
       ],
     );
-    */
   }
 
   @override
@@ -98,14 +102,43 @@ class _MyHomePageState extends State<MyHomePage> {
       body: StreamBuilder<User?>(
         stream: widget.authService.getStream(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+          // Display this if an error occurs
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
 
+          // Display this while connecting to Firebase
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading...");
           }
 
+          // Display this if the user is not logged in yet
+          if (!snapshot.hasData) {
+            if (!loginSelected && !createAccountSelected) {
+              return renderStartingScreen();
+            } else {
+              return renderAuthInterface();
+            }
+
+            return Scaffold(
+              body: Center(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(64.0),
+                  child: Column(
+                    children: [
+                      AppBar(title: const Text('Log In')),
+                      LoginScreen(),
+                      AppBar(title: const Text('Create Account')),
+                      CreateAccountScreen(),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          }
+
+          /*
+          // Display this if the user is not logged in yet
           if (!snapshot.hasData) {
             return Scaffold(
               body: Center(
@@ -123,6 +156,9 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             );
           }
+          */
+
+          // Display this once the user is logged in
           return ProfileScreen(emailAddress: widget.authService.getEmail());
         },
       ),
