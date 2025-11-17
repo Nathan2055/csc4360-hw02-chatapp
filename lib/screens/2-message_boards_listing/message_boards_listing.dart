@@ -38,44 +38,40 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
             ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
           ),
           BoardCard(
-            icon: Icons.fitness_center,
-            title: 'Workout Log',
+            icon: Icons.games,
+            title: 'Games',
             subtitle: 'Track your workouts',
-            color: const Color(0xFF6366F1),
+            color: Colors.orange,
+            //color: const Color(0xFF6366F1),
             targetScreen: Container(),
             //targetScreen: WorkoutLogScreen(),
           ),
           BoardCard(
-            icon: Icons.local_fire_department,
-            title: 'Calorie Tracker',
+            icon: Icons.show_chart,
+            title: 'Business',
             subtitle: 'Track your calories',
-            color: const Color(0xFFEC4899),
+            color: Colors.teal,
+            //color: const Color(0xFFEC4899),
             targetScreen: Container(),
             //targetScreen: CalorieTrackerScreen(),
           ),
           BoardCard(
-            icon: Icons.show_chart,
-            title: 'Progress Reports',
+            icon: Icons.health_and_safety,
+            title: 'Public Health',
             subtitle: 'View charts on your progress',
-            color: const Color(0xFF10B981),
+            color: Colors.pinkAccent,
+            //color: const Color(0xFF10B981),
             targetScreen: Container(),
             //targetScreen: ProgressReportsScreen(),
           ),
           BoardCard(
-            icon: Icons.sports_gymnastics,
-            title: 'Preset Routines',
+            icon: Icons.school,
+            title: 'Study',
             subtitle: 'View info on preset workouts',
-            color: const Color(0xFFF59E0B),
+            color: Colors.purple,
+            //color: const Color(0xFFF59E0B),
             targetScreen: Container(),
             //targetScreen: PresetRoutinesScreen(),
-          ),
-          BoardCard(
-            icon: Icons.restaurant_menu,
-            title: 'Recipe Book',
-            subtitle: 'Explore healthy recipes',
-            color: const Color(0xFF8B5CF6),
-            targetScreen: Container(),
-            //targetScreen: RecipeListScreen(),
           ),
         ],
       ),
@@ -187,6 +183,15 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Firebase Chat App')),
+      body: Scaffold(body: Center(child: renderBoardsListing())),
+    );
+  }
+
+  /*
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Firebase Chat App')),
       body: StreamBuilder<User?>(
         stream: widget.authService.getStream(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
@@ -235,4 +240,5 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
       ),
     );
   }
+  */
 }
