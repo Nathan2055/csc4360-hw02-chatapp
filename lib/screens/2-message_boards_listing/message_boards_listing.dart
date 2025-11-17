@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/screens/1-welcome_screen/create_account_screen.dart';
-import 'package:chatapp/screens/1-welcome_screen/login_screen.dart';
-import 'package:chatapp/screens/profile_screen.dart';
 import 'package:chatapp/screens/2-message_boards_listing/board_card.dart';
 
 class MessageBoardsListing extends StatefulWidget {
@@ -21,161 +17,40 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
     fontWeight: FontWeight.w400,
   );
 
-  // Tracking variables for which interface is selected
-  bool loginSelected = false;
-  bool createAccountSelected = false;
-
-  Widget renderBoardsListing() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Fitness Tracker',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineLarge?.copyWith(fontWeight: FontWeight.bold),
-          ),
-          BoardCard(
-            icon: Icons.games,
-            title: 'Games',
-            subtitle: 'Track your workouts',
-            color: Colors.orange,
-            //color: const Color(0xFF6366F1),
-            targetScreen: Container(),
-            //targetScreen: WorkoutLogScreen(),
-          ),
-          BoardCard(
-            icon: Icons.show_chart,
-            title: 'Business',
-            subtitle: 'Track your calories',
-            color: Colors.teal,
-            //color: const Color(0xFFEC4899),
-            targetScreen: Container(),
-            //targetScreen: CalorieTrackerScreen(),
-          ),
-          BoardCard(
-            icon: Icons.health_and_safety,
-            title: 'Public Health',
-            subtitle: 'View charts on your progress',
-            color: Colors.pinkAccent,
-            //color: const Color(0xFF10B981),
-            targetScreen: Container(),
-            //targetScreen: ProgressReportsScreen(),
-          ),
-          BoardCard(
-            icon: Icons.school,
-            title: 'Study',
-            subtitle: 'View info on preset workouts',
-            color: Colors.purple,
-            //color: const Color(0xFFF59E0B),
-            targetScreen: Container(),
-            //targetScreen: PresetRoutinesScreen(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // Decide which interface to display based on selection
-  Scaffold renderAuthInterface() {
-    // If somehow both options get selected, reset them both
-    if (loginSelected && createAccountSelected) {
-      setState(() {
-        loginSelected = false;
-        createAccountSelected = false;
-      });
-    }
-
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(64.0),
-          child: Column(
-            children: [
-              // If the login screen is selected, render the login screen
-              loginSelected
-                  ? Column(
-                      spacing: 24.0,
-                      children: [
-                        Text('Log In', style: titleTextStyle),
-                        LoginScreen(widget.authService),
-                      ],
-                    )
-                  : Container(),
-
-              // If the create account screen is selected, render the create account screen
-              createAccountSelected
-                  ? Column(
-                      spacing: 24.0,
-                      children: [
-                        Text('Create Account', style: titleTextStyle),
-                        CreateAccountScreen(widget.authService),
-                      ],
-                    )
-                  : Container(),
-
-              SizedBox(height: 16.0),
-              backButton(),
-            ],
-          ),
+  Column renderBoardsListing() {
+    return Column(
+      spacing: 24.0,
+      children: [
+        Text('Message Boards', style: titleTextStyle),
+        BoardCard(
+          icon: Icons.games,
+          title: 'Games',
+          subtitle: 'Track your workouts',
+          color: Colors.orange,
+          targetScreen: Container(), // TODO: link out to board
         ),
-      ),
-    );
-  }
-
-  // Starting interface to select between logging in and creating account
-  Scaffold renderStartingScreen() {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(64.0),
-          child: Column(
-            spacing: 24.0,
-            children: [
-              Text('Firebase Chat App', style: titleTextStyle),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    loginSelected = true;
-                  });
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Login')],
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    createAccountSelected = true;
-                  });
-                },
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Create Account')],
-                ),
-              ),
-            ],
-          ),
+        BoardCard(
+          icon: Icons.show_chart,
+          title: 'Business',
+          subtitle: 'Track your calories',
+          color: Colors.teal,
+          targetScreen: Container(), // TODO: link out to board
         ),
-      ),
-    );
-  }
-
-  ElevatedButton backButton() {
-    return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          loginSelected = false;
-          createAccountSelected = false;
-        });
-      },
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text('Back')],
-      ),
+        BoardCard(
+          icon: Icons.health_and_safety,
+          title: 'Public Health',
+          subtitle: 'View charts on your progress',
+          color: Colors.pinkAccent,
+          targetScreen: Container(), // TODO: link out to board
+        ),
+        BoardCard(
+          icon: Icons.school,
+          title: 'Study',
+          subtitle: 'View info on preset workouts',
+          color: Colors.purple,
+          targetScreen: Container(), // TODO: link out to board
+        ),
+      ],
     );
   }
 
@@ -183,62 +58,12 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Firebase Chat App')),
-      body: Scaffold(body: Center(child: renderBoardsListing())),
-    );
-  }
-
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Firebase Chat App')),
-      body: StreamBuilder<User?>(
-        stream: widget.authService.getStream(),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-          // Display this if an error occurs
-          if (snapshot.hasError) {
-            return Scaffold(
-              body: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(64.0),
-                  child: Column(
-                    children: [
-                      Text('Something went wrong', style: titleTextStyle),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          // Display this while connecting to Firebase
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Scaffold(
-              body: Center(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(64.0),
-                  child: Column(
-                    children: [Text('Loading...', style: titleTextStyle)],
-                  ),
-                ),
-              ),
-            );
-          }
-
-          // Display this if the user is not logged in yet
-          if (!snapshot.hasData) {
-            if (!loginSelected && !createAccountSelected) {
-              return renderStartingScreen();
-            } else {
-              return renderAuthInterface();
-            }
-          }
-
-          // Display this once the user is logged in
-          return ProfileScreen(emailAddress: widget.authService.getEmail());
-        },
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(64.0),
+          child: renderBoardsListing(),
+        ),
       ),
     );
   }
-  */
 }
