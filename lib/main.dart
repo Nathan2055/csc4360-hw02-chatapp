@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Firebase Auth Demo',
+      title: 'Firebase Chat App',
       home: MyHomePage(authService),
     );
   }
@@ -30,7 +30,6 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage(this.authService, {super.key});
-  final String title = 'Firebase Auth Demo';
   final Duration delay = const Duration(seconds: 1);
   final AuthService authService;
 
@@ -146,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(title: Text('Firebase Chat App')),
       body: StreamBuilder<User?>(
         stream: widget.authService.getStream(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
