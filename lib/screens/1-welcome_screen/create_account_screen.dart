@@ -1,6 +1,8 @@
 import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
 
+// Create Account screen
+// Imported and shown on the welcome screen when the create account button is pressed
 class CreateAccountScreen extends StatefulWidget {
   const CreateAccountScreen(this.authService, {super.key});
 

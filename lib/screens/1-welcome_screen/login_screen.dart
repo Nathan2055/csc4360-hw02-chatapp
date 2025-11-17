@@ -1,6 +1,8 @@
 import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
 
+// Login screen
+// Imported and shown on the welcome screen when the login button is pressed
 class LoginScreen extends StatefulWidget {
   const LoginScreen(this.authService, {super.key});
 
