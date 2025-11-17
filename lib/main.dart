@@ -41,8 +41,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // TextStyle for titles
   TextStyle titleTextStyle = const TextStyle(
     fontSize: 22.0,
-    fontWeight: FontWeight.w500,
-    height: 28.0,
+    fontWeight: FontWeight.w400,
   );
 
   // Tracking variables for which interface is selected
