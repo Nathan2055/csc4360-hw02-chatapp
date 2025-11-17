@@ -12,7 +12,7 @@ class BoardCard extends StatelessWidget {
     super.key,
     required this.icon,
     required this.title,
-    required this.subtitle,
+    this.subtitle = '',
     required this.color,
     required this.targetScreen,
   });
@@ -66,14 +66,20 @@ class BoardCard extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              subtitle,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: 14,
-                              ),
-                            ),
+                            subtitle != ''
+                                ? const SizedBox(height: 4)
+                                : Container(),
+                            subtitle != ''
+                                ? Text(
+                                    subtitle,
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ),

@@ -25,28 +25,24 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
         BoardCard(
           icon: Icons.games,
           title: 'Games',
-          subtitle: 'Track your workouts',
           color: Colors.orange,
           targetScreen: Container(), // TODO: link out to board
         ),
         BoardCard(
           icon: Icons.show_chart,
           title: 'Business',
-          subtitle: 'Track your calories',
           color: Colors.teal,
           targetScreen: Container(), // TODO: link out to board
         ),
         BoardCard(
           icon: Icons.health_and_safety,
           title: 'Public Health',
-          subtitle: 'View charts on your progress',
           color: Colors.pinkAccent,
           targetScreen: Container(), // TODO: link out to board
         ),
         BoardCard(
           icon: Icons.school,
           title: 'Study',
-          subtitle: 'View info on preset workouts',
           color: Colors.purple,
           targetScreen: Container(), // TODO: link out to board
         ),
