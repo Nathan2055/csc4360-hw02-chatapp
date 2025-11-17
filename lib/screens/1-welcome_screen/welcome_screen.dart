@@ -9,7 +9,6 @@ import 'package:chatapp/screens/profile_screen.dart';
 // Includes login and create account options
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen(this.authService, {super.key});
-  final Duration delay = const Duration(seconds: 1);
   final AuthService authService;
 
   @override
