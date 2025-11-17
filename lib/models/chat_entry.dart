@@ -1,0 +1,44 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+class ChatEntry {
+  final String id;
+  final String message;
+  final int quantity;
+  final double price;
+  final String category;
+  final DateTime createdAt;
+
+  ChatEntry({
+    required this.message,
+    this.quantity = 1,
+    required this.price,
+    this.category = "default",
+    required this.createdAt,
+    required this.id,
+  });
+
+  //convert item to a firestore-friendly map data
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': message,
+      'quantity': quantity,
+      'price': price,
+      'category': category,
+      'createdAt': createdAt,
+    };
+  }
+
+  //create an item from a firestore document snapshot
+  factory ChatEntry.fromSnapshot(DocumentSnapshot snapshot) {
+    final data = snapshot.data() as Map<String, dynamic>;
+    return ChatEntry(
+      id: snapshot.id,
+      message: data['name'],
+      quantity: data['quantity'],
+      price: data['price'],
+      category: data['category'],
+      createdAt: data['createdAt'].toDate(),
+    );
+  }
+}
