@@ -37,6 +37,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(title: Text('Firebase Chat App')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
@@ -76,6 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   // Starting interface to select between logging in and creating account
   Scaffold renderStartingScreen() {
     return Scaffold(
+      appBar: AppBar(title: Text('Firebase Chat App')),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
@@ -130,13 +132,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Firebase Chat App')),
       body: StreamBuilder<User?>(
         stream: widget.authService.getStream(),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           // Display this if an error occurs
           if (snapshot.hasError) {
             return Scaffold(
+              appBar: AppBar(title: Text('Firebase Chat App')),
               body: Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(64.0),
@@ -152,6 +154,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           // Display this while connecting to Firebase
           else if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
+              appBar: AppBar(title: Text('Firebase Chat App')),
               body: Center(
                 child: SingleChildScrollView(
                   padding: const EdgeInsets.all(64.0),
