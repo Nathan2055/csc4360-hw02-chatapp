@@ -33,8 +33,8 @@ class UserEntry {
       firstName: data?['firstName'],
       lastName: data?['lastName'],
       role: data?['role'],
-      registeredOn: data?['firstName'] != null
-          ? DateTime.parse(data?['firstName'])
+      registeredOn: data?['registeredOn'] != null
+          ? DateTime.parse(data?['registeredOn'])
           : null,
     );
   }

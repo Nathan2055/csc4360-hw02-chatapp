@@ -18,6 +18,19 @@ class UserDatabase {
     docRef.set(user);
   }
 
+  Future<UserEntry?> getUserEntryFromEmailNew(String email) async {
+    final docRef = _firestore
+        .collection(collectionName)
+        .doc(email)
+        .withConverter(
+          fromFirestore: UserEntry.fromFirestore,
+          toFirestore: (UserEntry userEntry, _) => userEntry.toFirestore(),
+        );
+    final docSnap = await docRef.get();
+    final user = docSnap.data();
+    return user;
+  }
+
   void addUserEntryUnstruct(
     String username,
     String email,

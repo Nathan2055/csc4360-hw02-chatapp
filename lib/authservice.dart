@@ -19,6 +19,8 @@ class AuthService {
         username: username,
         firstName: firstName,
         lastName: lastName,
+        role: 'user',
+        registeredOn: DateTime.now(),
       );
 
       _auth.createUserWithEmailAndPassword(
