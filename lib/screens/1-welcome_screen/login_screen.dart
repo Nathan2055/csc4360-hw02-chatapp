@@ -16,24 +16,18 @@ class _LoginScreenState extends State<LoginScreen> {
   // Form state key
   final _formKey = GlobalKey<FormState>();
 
-  // Hardcoded login details
-  final String adminUsername = 'admin';
-  final String adminPassword = 'admin';
-  final String viewerUsername = 'viewer';
-  final String viewerPassword = 'viewer';
-
   // Text field controllers
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   // Track password visibility for the "show password" toggle
   bool _isPasswordVisible = false;
 
-  void _submitForm() async {
-    String emailAddress = _usernameController.text;
+  void _submitForm() {
+    String emailAddress = _emailController.text;
     String password = _passwordController.text;
 
-    await widget.authService.login(emailAddress, password);
+    widget.authService.login(emailAddress, password);
 
     print('are we logged in?');
     print(widget.authService.isLoggedIn());
@@ -50,10 +44,10 @@ class _LoginScreenState extends State<LoginScreen> {
         children: [
           // Username field
           TextFormField(
-            controller: _usernameController,
+            controller: _emailController,
             decoration: InputDecoration(
-              labelText: 'Username',
-              prefixIcon: const Icon(Icons.person),
+              labelText: 'Email Address',
+              prefixIcon: const Icon(Icons.email),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
