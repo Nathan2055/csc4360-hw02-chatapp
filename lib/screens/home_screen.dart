@@ -13,6 +13,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  AppBar homeScreenAppBar = AppBar(title: const Text('Firebase Chat App'));
+
   UserDatabase userDB = UserDatabase();
 
   UserEntry? userInfo;
@@ -49,7 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile Screen')),
+      appBar: homeScreenAppBar,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
