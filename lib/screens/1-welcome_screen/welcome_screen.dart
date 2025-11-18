@@ -173,10 +173,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           // Display this once the user is logged in
           else {
             // Reset both display toggles so the welcome screen is shown again if the user logs out
-            setState(() {
-              loginSelected = false;
-              createAccountSelected = false;
-            });
+            // Don't use setState() here since it will trigger a rebuild we don't need yet
+            loginSelected = false;
+            createAccountSelected = false;
             return ProfileScreen(widget.authService);
           }
         },
