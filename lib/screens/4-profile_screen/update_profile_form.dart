@@ -30,9 +30,13 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   void initState() {
     super.initState();
 
-    String email = widget.authService.getEmail();
+    setState(() {
+      _loadUserInfo();
+    });
+  }
 
-    userDB.getUserEntryFromEmail(email).then((result) {
+  void _loadUserInfo() {
+    userDB.getUserEntryFromEmail(widget.authService.getEmail()).then((result) {
       setState(() {
         if (result != null) {
           _fillFormFields(result); // fill form fields before loading the widget
