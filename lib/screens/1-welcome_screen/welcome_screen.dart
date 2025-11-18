@@ -16,7 +16,7 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
-  AppBar authScreenAppBar = AppBar(title: Text('Firebase Chat App'));
+  AppBar authScreenAppBar = AppBar(title: const Text('Firebase Chat App'));
 
   // TextStyle for titles
   TextStyle titleTextStyle = const TextStyle(
