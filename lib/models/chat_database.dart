@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chatapp/models/chat_entry.dart';
 
-class FirestoreService {
+class ChatDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   void addChatEntry(String collection, ChatEntry chatEntry) {
