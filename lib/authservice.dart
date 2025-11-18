@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 import 'package:chatapp/models/user_entry.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final UserDatabase userDatabase = UserDatabase();
+  final FirestoreHelper userDatabase;
+
+  AuthService(this.userDatabase);
 
   void createAccount(
     String emailAddress,

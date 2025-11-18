@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
-import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen(this.authService, {super.key});
+  const ProfileScreen(this.authService, this.dbHelper, {super.key});
 
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  UserDatabase userDB = UserDatabase();
-
   UserEntry? userInfo;
   late String email;
 
@@ -24,7 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     email = widget.authService.getEmail();
 
-    userDB.getUserEntryFromEmail(email).then((result) {
+    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
       print("result: $result");
       setState(() {
         if (result != null) {

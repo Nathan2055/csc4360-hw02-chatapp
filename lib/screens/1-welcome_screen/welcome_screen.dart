@@ -1,3 +1,4 @@
+import 'package:chatapp/models/firestore_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatapp/authservice.dart';
@@ -8,8 +9,10 @@ import 'package:chatapp/screens/home_screen.dart';
 // Initial welcome screen shown on app startup
 // Includes login and create account options
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen(this.authService, {super.key});
+  const WelcomeScreen(this.authService, this.dbHelper, {super.key});
+
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -51,7 +54,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       spacing: 24.0,
                       children: [
                         Text('Log In', style: titleTextStyle),
-                        LoginScreen(widget.authService),
+                        LoginScreen(widget.authService, widget.dbHelper),
                       ],
                     )
                   : Container(),
@@ -62,7 +65,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       spacing: 24.0,
                       children: [
                         Text('Create Account', style: titleTextStyle),
-                        CreateAccountScreen(widget.authService),
+                        CreateAccountScreen(
+                          widget.authService,
+                          widget.dbHelper,
+                        ),
                       ],
                     )
                   : Container(),
@@ -181,7 +187,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             // Don't use setState() here since it will trigger a rebuild we don't need yet
             loginSelected = false;
             createAccountSelected = false;
-            return HomeScreen(widget.authService);
+            return HomeScreen(widget.authService, widget.dbHelper);
           }
         },
       ),

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
-import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen(this.authService, {super.key});
+  const HomeScreen(this.authService, this.dbHelper, {super.key});
 
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -16,8 +17,6 @@ class _HomeScreenState extends State<HomeScreen> {
   AppBar homeScreenAppBar = AppBar(title: const Text('Firebase Chat App'));
 
   String _visibleScreen = 'home';
-
-  UserDatabase userDB = UserDatabase();
 
   UserEntry? userInfo;
   late String email;
@@ -63,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     email = widget.authService.getEmail();
 
-    userDB.getUserEntryFromEmail(email).then((result) {
+    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
       print("result: $result");
       setState(() {
         if (result != null) {

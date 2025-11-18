@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
-import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen(this.authService, {super.key});
+  const SettingsScreen(this.authService, this.dbHelper, {super.key});
 
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
@@ -15,8 +16,6 @@ class SettingsScreen extends StatefulWidget {
 class _SettingsScreenState extends State<SettingsScreen> {
   // TODO: change password
   // TODO: change email
-
-  UserDatabase userDB = UserDatabase();
 
   UserEntry? userInfo;
   late String email;
@@ -27,7 +26,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     email = widget.authService.getEmail();
 
-    userDB.getUserEntryFromEmail(email).then((result) {
+    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
       print("result: $result");
       setState(() {
         if (result != null) {

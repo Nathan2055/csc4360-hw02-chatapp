@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chatapp/models/user_entry.dart';
 
-class UserDatabase {
+class FirestoreHelper {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionName = 'users';
 

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 // Login screen
 // Imported and shown on the welcome screen when the login button is pressed
 class LoginScreen extends StatefulWidget {
-  const LoginScreen(this.authService, {super.key});
+  const LoginScreen(this.authService, this.dbHelper, {super.key});
 
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/screens/2-message_boards_listing/board_card.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 class MessageBoardsListing extends StatefulWidget {
-  const MessageBoardsListing(this.authService, {super.key});
+  const MessageBoardsListing(this.authService, this.dbHelper, {super.key});
+
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<MessageBoardsListing> createState() => _MessageBoardsListingState();

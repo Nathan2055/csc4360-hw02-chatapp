@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
-import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/firestore_helper.dart';
 
 // Create Account screen
 // Imported and shown on the welcome screen when the create account button is pressed
 class UpdateProfileForm extends StatefulWidget {
-  const UpdateProfileForm(this.authService, {super.key});
+  const UpdateProfileForm(this.authService, this.dbHelper, {super.key});
 
   final AuthService authService;
+  final FirestoreHelper dbHelper;
 
   @override
   State<UpdateProfileForm> createState() => _UpdateProfileFormState();
@@ -23,7 +24,6 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
 
-  UserDatabase userDB = UserDatabase();
   UserEntry? userInfo;
 
   @override
@@ -36,7 +36,9 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   }
 
   void _loadUserInfo() {
-    userDB.getUserEntryFromEmail(widget.authService.getEmail()).then((result) {
+    widget.dbHelper.getUserEntryFromEmail(widget.authService.getEmail()).then((
+      result,
+    ) {
       setState(() {
         if (result != null) {
           _fillFormFields(result); // fill form fields before loading the widget
