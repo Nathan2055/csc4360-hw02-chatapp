@@ -15,47 +15,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   AppBar homeScreenAppBar = AppBar(title: const Text('Firebase Chat App'));
 
-  AppBar setup = AppBar(
-    title: const Text('Firebase Chat App'),
-    actions: <Widget>[
-      // This button is where the magic happens
-      IconButton(
-        // The icon and tooltip is also provided by the theme model
-        icon: Provider.of<ThemeModel>(context).themeIcon,
-        tooltip: Provider.of<ThemeModel>(context).themeText,
-        // toggleThemeMode is called to globally update the current theme
-        onPressed: () {
-          var model = context.read<ThemeModel>();
-          model.toggleThemeMode();
-        },
-      ),
-
-      IconButton(
-        icon: const Icon(Icons.home),
-        tooltip: 'Home',
-        onPressed: _updateVisibleScreen('home'),
-      ),
-
-      IconButton(
-        icon: const Icon(Icons.person),
-        tooltip: 'Profile',
-        onPressed: _updateVisibleScreen('profile'),
-      ),
-
-      IconButton(
-        icon: const Icon(Icons.settings),
-        tooltip: 'Settings',
-        onPressed: _updateVisibleScreen('settings'),
-      ),
-    ],
-  );
-
   String _visibleScreen = 'home';
-  void _updateVisibleScreen(String newScreen) {
-    setState(() {
-      _visibleScreen = newScreen;
-    });
-  }
 
   UserDatabase userDB = UserDatabase();
 
@@ -69,37 +29,34 @@ class _HomeScreenState extends State<HomeScreen> {
     homeScreenAppBar = AppBar(
       title: const Text('Firebase Chat App'),
       actions: <Widget>[
-        // This button is where the magic happens
-        IconButton(
-          // The icon and tooltip is also provided by the theme model
-          icon: Provider.of<ThemeModel>(context).themeIcon,
-          tooltip: Provider.of<ThemeModel>(context).themeText,
-          // toggleThemeMode is called to globally update the current theme
-          onPressed: () {
-            var model = context.read<ThemeModel>();
-            model.toggleThemeMode();
-          },
-        ),
-
         IconButton(
           icon: const Icon(Icons.home),
           tooltip: 'Home',
           onPressed: () {
-            _updateVisibleScreen('home');
+            setState(() {
+              _visibleScreen = 'home';
+            });
           },
-          onPressed: _updateVisibleScreen('home'),
         ),
 
         IconButton(
           icon: const Icon(Icons.person),
           tooltip: 'Profile',
-          onPressed: _updateVisibleScreen('profile'),
+          onPressed: () {
+            setState(() {
+              _visibleScreen = 'profile';
+            });
+          },
         ),
 
         IconButton(
           icon: const Icon(Icons.settings),
           tooltip: 'Settings',
-          onPressed: _updateVisibleScreen('settings'),
+          onPressed: () {
+            setState(() {
+              _visibleScreen = 'settings';
+            });
+          },
         ),
       ],
     );
