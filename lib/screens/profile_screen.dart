@@ -21,6 +21,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     String finalInfo = '';
     String finalEmail = '';
 
+    int functionTest = widget.authService.getCurrentUserInfoTest();
+    print('result of call to getCurrentUserInfoTest() was code $functionTest');
+
     UserEntry? userinfo_test = widget.authService.getCurrentUserInfo();
     if (userinfo_test != null) {
       UserEntry userinfo = userinfo_test;

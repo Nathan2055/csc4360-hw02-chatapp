@@ -72,6 +72,19 @@ class AuthService {
     return userdata;
   }
 
+  int getCurrentUserInfoTest() {
+    User? user_test = _auth.currentUser;
+    if (user_test == null) return 3;
+    User user = user_test;
+    String? email_test = user.email;
+    if (email_test == null) return 2;
+    String email = email_test;
+    UserEntry? userdata_test = userDatabase.getUserEntryFromEmail(email);
+    if (userdata_test == null) return 1;
+    UserEntry userdata = userdata_test;
+    return 0;
+  }
+
   bool isLoggedIn() {
     if (_auth.currentUser != null) {
       print('current user:');
