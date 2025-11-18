@@ -94,6 +94,13 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(64.0),
           child: Column(
             children: [
+              (_visibleScreen == 'profile')
+                  ? Text('Profile screen enabled')
+                  : Container(),
+              (_visibleScreen == 'settings')
+                  ? Text('Settings screen enabled')
+                  : Container(),
+              (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
               Text('Welcome! Your email is $email'),
               SizedBox(height: 20),
               Text('Other profile information:'),
