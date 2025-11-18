@@ -35,6 +35,7 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     userDB.getUserEntryFromEmail(email).then((result) {
       setState(() {
         if (result != null) {
+          _fillFormFields(result); // fill form fields before loading the widget
           userInfo = result;
         }
       });
@@ -42,15 +43,11 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   }
 
   void _fillFormFields(UserEntry initialInfo) {
-    final String initialUsername = initialInfo.username!;
-    final String initialFirstName = initialInfo.firstName!;
-    final String initialLastName = initialInfo.lastName!;
-
-    setState(() {});
-
-    _usernameController.text = initialUsername;
-    _firstNameController.text = initialFirstName;
-    _lastNameController.text = initialLastName;
+    setState(() {
+      _usernameController.text = initialInfo.username!;
+      _firstNameController.text = initialInfo.firstName!;
+      _lastNameController.text = initialInfo.lastName!;
+    });
   }
 
   void _submitForm() {
