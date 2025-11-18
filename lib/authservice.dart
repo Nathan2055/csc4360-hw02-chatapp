@@ -14,16 +14,26 @@ class AuthService {
     String lastName,
   ) {
     try {
+      UserEntry newUser = UserEntry(
+        email: emailAddress,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+      );
+
       _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
+      userDatabase.addUserEntryNew(newUser);
+      /*
       userDatabase.addUserEntryUnstruct(
         username,
         emailAddress,
         firstName,
         lastName,
       );
+      */
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');

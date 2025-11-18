@@ -6,6 +6,18 @@ class UserDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionName = 'users';
 
+  void addUserEntryNew(UserEntry user) {
+    final docRef = _firestore
+        .collection(collectionName)
+        .withConverter(
+          fromFirestore: UserEntry.fromFirestore,
+          toFirestore: (UserEntry userEntry, options) =>
+              userEntry.toFirestore(),
+        )
+        .doc(user.email);
+    docRef.set(user);
+  }
+
   void addUserEntryUnstruct(
     String username,
     String email,
