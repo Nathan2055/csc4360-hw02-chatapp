@@ -1,16 +1,30 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chatapp/models/user_database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final UserDatabase userDatabase = UserDatabase();
 
-  Future<void> createAccount(String emailAddress, String password) async {
+  void createAccount(
+    String emailAddress,
+    String password,
+    String username,
+    String firstName,
+    String lastName,
+  ) {
     print('creating account');
     try {
-      await _auth.createUserWithEmailAndPassword(
+      _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
-      await login(emailAddress, password);
+      userDatabase.addUserEntryUnstruct(
+        username,
+        emailAddress,
+        firstName,
+        lastName,
+      );
+      login(emailAddress, password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -22,13 +36,10 @@ class AuthService {
     }
   }
 
-  Future<void> login(String emailAddress, String password) async {
+  void login(String emailAddress, String password) {
     print('logging in');
     try {
-      await _auth.signInWithEmailAndPassword(
-        email: emailAddress,
-        password: password,
-      );
+      _auth.signInWithEmailAndPassword(email: emailAddress, password: password);
       print('logged in');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
@@ -41,10 +52,10 @@ class AuthService {
     }
   }
 
-  Future<void> logout() async {
+  void logout() {
     print('signing out');
     try {
-      await _auth.signOut();
+      _auth.signOut();
       print('signed out');
     } on FirebaseAuthException catch (e) {
       print(e);
