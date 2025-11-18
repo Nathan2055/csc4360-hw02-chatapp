@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatapp/models/user_database.dart';
+import 'package:chatapp/models/user_entry.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -60,6 +61,19 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       print(e);
     }
+  }
+
+  UserEntry? getCurrentUserInfo() {
+    User? user_test = _auth.currentUser;
+    if (user_test == null) return null;
+    User user = user_test;
+    String? email_test = user.email;
+    if (email_test == null) return null;
+    String email = email_test;
+    UserEntry? userdata_test = userDatabase.getUserEntryFromEmail(email);
+    if (userdata_test == null) return null;
+    UserEntry userdata = userdata_test;
+    return userdata;
   }
 
   bool isLoggedIn() {

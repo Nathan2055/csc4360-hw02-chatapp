@@ -34,6 +34,25 @@ class UserDatabase {
     }
   }
 
+  UserEntry? getUserEntryFromEmail(String email) {
+    try {
+      _firestore
+          .collection(collectionName)
+          .where('email', isEqualTo: email)
+          .get()
+          .then((querySnapshot) {
+            print("Successfully completed");
+            for (var docSnapshot in querySnapshot.docs) {
+              return UserEntry.fromSnapshot(docSnapshot);
+            }
+          });
+    } catch (e) {
+      debugPrint('Error creating item: $e');
+      return null;
+    }
+    return null;
+  }
+
   Stream<List<UserEntry>> getUserEntryStream() {
     return _firestore
         .collection(collectionName)
