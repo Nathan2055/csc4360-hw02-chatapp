@@ -1,5 +1,5 @@
-import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp/authservice.dart';
 
 // Login screen
 // Imported and shown on the welcome screen when the login button is pressed
@@ -28,9 +28,6 @@ class _LoginScreenState extends State<LoginScreen> {
     String password = _passwordController.text;
 
     widget.authService.login(emailAddress, password);
-
-    print('are we logged in?');
-    print(widget.authService.isLoggedIn());
   }
 
   @override

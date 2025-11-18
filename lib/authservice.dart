@@ -22,21 +22,13 @@ class AuthService {
         role: 'user',
         registeredOn: DateTime.now(),
       );
-
       _auth.createUserWithEmailAndPassword(
         email: emailAddress,
         password: password,
       );
       userDatabase.addUserEntryNew(newUser);
-      /*
-      userDatabase.addUserEntryUnstruct(
-        username,
-        emailAddress,
-        firstName,
-        lastName,
-      );
-      */
     } on FirebaseAuthException catch (e) {
+      // TODO: pass exceptions up to a snackbar
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
@@ -69,32 +61,6 @@ class AuthService {
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-  }
-
-  UserEntry? getCurrentUserInfo() {
-    User? user_test = _auth.currentUser;
-    if (user_test == null) return null;
-    User user = user_test;
-    String? email_test = user.email;
-    if (email_test == null) return null;
-    String email = email_test;
-    UserEntry? userdata_test = userDatabase.getUserEntryFromEmail(email);
-    if (userdata_test == null) return null;
-    UserEntry userdata = userdata_test;
-    return userdata;
-  }
-
-  int getCurrentUserInfoTest() {
-    User? user_test = _auth.currentUser;
-    if (user_test == null) return 3;
-    User user = user_test;
-    String? email_test = user.email;
-    if (email_test == null) return 2;
-    String email = email_test;
-    UserEntry? userdata_test = userDatabase.getUserEntryFromEmail(email);
-    if (userdata_test == null) return 1;
-    UserEntry userdata = userdata_test;
-    return 0;
   }
 
   bool isLoggedIn() {

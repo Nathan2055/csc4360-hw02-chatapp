@@ -50,31 +50,4 @@ class UserEntry {
       if (registeredOn != null) "registeredOn": registeredOn.toString(),
     };
   }
-
-  // Convert the item to a Firestore-compatible map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'username': username,
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'role': role,
-      'registeredOn': registeredOn,
-    };
-  }
-
-  // Create an item from a Firestore document snapshot
-  factory UserEntry.fromSnapshot(DocumentSnapshot snapshot) {
-    final data = snapshot.data() as Map<String, dynamic>;
-    return UserEntry(
-      id: snapshot.id,
-      username: data['username'],
-      email: data['email'],
-      firstName: data['firstName'],
-      lastName: data['lastName'],
-      role: data['role'],
-      registeredOn: DateTime.parse(data['registeredOn']),
-    );
-  }
 }
