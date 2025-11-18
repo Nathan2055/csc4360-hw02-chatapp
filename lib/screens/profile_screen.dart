@@ -13,8 +13,8 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  void _logout() async {
-    await widget.authService.logout();
+  void _logout() {
+    widget.authService.logout();
 
     print('are we logged in?');
     print(widget.authService.isLoggedIn());
