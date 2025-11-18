@@ -79,13 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Map? user1;
-    String? user2;
-
-    if (userInfo != null) {
-      user1 = userInfo!.toFirestore();
-      user2 = user1.toString();
-    }
+    String userInfoString = userInfo!.toFirestore().toString();
 
     return Scaffold(
       appBar: homeScreenAppBar,
@@ -105,8 +99,8 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20),
               Text('Other profile information:'),
               SizedBox(height: 20),
-              (user2 != null) ? Text(user2) : Container(),
-              (user2 != null) ? SizedBox(height: 20) : Container(),
+              (userInfoString != null) ? Text(userInfoString) : Container(),
+              (userInfoString != null) ? SizedBox(height: 20) : Container(),
               ElevatedButton(
                 onPressed: _logout,
                 child: const Row(
