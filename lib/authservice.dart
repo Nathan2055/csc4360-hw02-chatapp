@@ -13,7 +13,6 @@ class AuthService {
     String firstName,
     String lastName,
   ) {
-    print('creating account');
     try {
       _auth.createUserWithEmailAndPassword(
         email: emailAddress,
@@ -25,7 +24,6 @@ class AuthService {
         firstName,
         lastName,
       );
-      login(emailAddress, password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
@@ -38,10 +36,8 @@ class AuthService {
   }
 
   void login(String emailAddress, String password) {
-    print('logging in');
     try {
       _auth.signInWithEmailAndPassword(email: emailAddress, password: password);
-      print('logged in');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');

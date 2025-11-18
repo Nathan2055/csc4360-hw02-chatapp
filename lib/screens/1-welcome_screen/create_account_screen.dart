@@ -1,5 +1,6 @@
 import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp/models/user_entry.dart';
 
 // Create Account screen
 // Imported and shown on the welcome screen when the create account button is pressed
@@ -39,6 +40,7 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
     String firstName = _firstNameController.text;
     String lastName = _lastNameController.text;
 
+    print('creating account');
     widget.authService.createAccount(
       emailAddress,
       password,
@@ -46,9 +48,25 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
       firstName,
       lastName,
     );
+    print('account created');
+
+    print('logging in');
+    widget.authService.login(emailAddress, password);
+    print('logged in');
 
     print('are we logged in?');
     print(widget.authService.isLoggedIn());
+
+    print('user info:');
+    UserEntry? userinfo_test = widget.authService.getCurrentUserInfo();
+    if (userinfo_test != null) {
+      UserEntry userinfo = userinfo_test;
+      Map userinfo_map = userinfo.toMap();
+      String userinfo_string = userinfo_map.toString();
+      print(userinfo_string);
+    } else {
+      print('error: user info was null');
+    }
   }
 
   @override
