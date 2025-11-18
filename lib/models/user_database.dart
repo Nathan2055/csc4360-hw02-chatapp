@@ -17,6 +17,9 @@ class UserDatabase {
     docRef.set(user);
   }
 
+  // Get the existing UserEntry from Firebase, convert it to a map,
+  // apply the profile updates, convert it back, and then save the result
+  // back to Firebase
   Future<bool> updateUserProfile(
     String emailID,
     String newUsername,
@@ -24,21 +27,6 @@ class UserDatabase {
     String newLastName,
   ) async {
     try {
-      UserEntry initialProfile = await getUserEntryFromEmail(emailID).then((
-        result,
-      ) {
-        if (result != null) {
-          return result;
-        } else {
-          throw Exception;
-        }
-      });
-
-      Map updatedProfileMap = initialProfile.toFirestore();
-      updatedProfileMap['username'] = newUsername;
-      updatedProfileMap['firstName'] = newFirstName;
-      updatedProfileMap['lastName'] = newLastName;
-
       UserEntry newProfile = await getUserEntryFromEmail(emailID).then((
         result,
       ) {
@@ -47,8 +35,7 @@ class UserDatabase {
           resultMap['username'] = newUsername;
           resultMap['firstName'] = newFirstName;
           resultMap['lastName'] = newLastName;
-          UserEntry constructedProfile = UserEntry.fromMap(resultMap);
-          return constructedProfile;
+          return UserEntry.fromMap(resultMap);
         } else {
           throw Exception;
         }
@@ -61,8 +48,11 @@ class UserDatabase {
             toFirestore: (UserEntry userEntry, options) =>
                 userEntry.toFirestore(),
           )
-          .doc(user.email);
-      docRef.set(user);
+          .doc(emailID);
+      await docRef.set(newProfile);
+
+      // TODO: add an extra check here?
+
       return true;
     } catch (e) {
       return false;
