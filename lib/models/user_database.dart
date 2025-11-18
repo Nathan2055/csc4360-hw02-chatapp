@@ -17,6 +17,58 @@ class UserDatabase {
     docRef.set(user);
   }
 
+  Future<bool> updateUserProfile(
+    String emailID,
+    String newUsername,
+    String newFirstName,
+    String newLastName,
+  ) async {
+    try {
+      UserEntry initialProfile = await getUserEntryFromEmail(emailID).then((
+        result,
+      ) {
+        if (result != null) {
+          return result;
+        } else {
+          throw Exception;
+        }
+      });
+
+      Map updatedProfileMap = initialProfile.toFirestore();
+      updatedProfileMap['username'] = newUsername;
+      updatedProfileMap['firstName'] = newFirstName;
+      updatedProfileMap['lastName'] = newLastName;
+
+      UserEntry newProfile = await getUserEntryFromEmail(emailID).then((
+        result,
+      ) {
+        if (result != null) {
+          Map<String, dynamic> resultMap = result.toFirestore();
+          resultMap['username'] = newUsername;
+          resultMap['firstName'] = newFirstName;
+          resultMap['lastName'] = newLastName;
+          UserEntry constructedProfile = UserEntry.fromMap(resultMap);
+          return constructedProfile;
+        } else {
+          throw Exception;
+        }
+      });
+
+      final docRef = _firestore
+          .collection(collectionName)
+          .withConverter(
+            fromFirestore: UserEntry.fromFirestore,
+            toFirestore: (UserEntry userEntry, options) =>
+                userEntry.toFirestore(),
+          )
+          .doc(user.email);
+      docRef.set(user);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   Future<UserEntry?> getUserEntryFromEmail(String email) async {
     final docRef = _firestore
         .collection(collectionName)
