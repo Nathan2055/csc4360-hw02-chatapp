@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/screens/1-welcome_screen/create_account_screen.dart';
 import 'package:chatapp/screens/1-welcome_screen/login_screen.dart';
-import 'package:chatapp/screens/profile_screen.dart';
+import 'package:chatapp/screens/home_screen.dart';
 
 // Initial welcome screen shown on app startup
 // Includes login and create account options
@@ -181,7 +181,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             // Don't use setState() here since it will trigger a rebuild we don't need yet
             loginSelected = false;
             createAccountSelected = false;
-            return ProfileScreen(widget.authService);
+            return HomeScreen(widget.authService);
           }
         },
       ),

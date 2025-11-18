@@ -3,16 +3,16 @@ import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/user_database.dart';
 
-class ProfileScreen extends StatefulWidget {
-  const ProfileScreen(this.authService, {super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen(this.authService, {super.key});
 
   final AuthService authService;
 
   @override
-  State<ProfileScreen> createState() => _ProfileScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ProfileScreenState extends State<ProfileScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   UserDatabase userDB = UserDatabase();
 
   UserEntry? userInfo;
