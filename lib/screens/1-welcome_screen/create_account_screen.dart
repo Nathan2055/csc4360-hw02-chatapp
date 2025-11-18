@@ -32,14 +32,20 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
   // Track password visibility for the "show password" toggle
   bool _isPasswordVisible = false;
 
-  void _submitForm() async {
+  void _submitForm() {
     String emailAddress = _emailController.text;
     String password = _passwordController.text;
     String username = _usernameController.text;
     String firstName = _firstNameController.text;
     String lastName = _lastNameController.text;
 
-    await widget.authService.createAccount(emailAddress, password);
+    widget.authService.createAccount(
+      emailAddress,
+      password,
+      username,
+      firstName,
+      lastName,
+    );
 
     print('are we logged in?');
     print(widget.authService.isLoggedIn());
@@ -54,12 +60,12 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
         mainAxisSize: MainAxisSize.min,
         spacing: 24.0,
         children: [
-          // Username field
+          // Email address field
           TextFormField(
             controller: _emailController,
             decoration: InputDecoration(
-              labelText: 'Username',
-              prefixIcon: const Icon(Icons.person),
+              labelText: 'Email Address',
+              prefixIcon: const Icon(Icons.email),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
               ),
