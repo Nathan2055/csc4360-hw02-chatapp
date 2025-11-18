@@ -5,7 +5,7 @@ class UserDatabase {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String collectionName = 'users';
 
-  void addUserEntryNew(UserEntry user) {
+  void addUserEntry(UserEntry user) {
     final docRef = _firestore
         .collection(collectionName)
         .withConverter(
@@ -17,7 +17,7 @@ class UserDatabase {
     docRef.set(user);
   }
 
-  Future<UserEntry?> getUserEntryFromEmailNew(String email) async {
+  Future<UserEntry?> getUserEntryFromEmail(String email) async {
     final docRef = _firestore
         .collection(collectionName)
         .doc(email)

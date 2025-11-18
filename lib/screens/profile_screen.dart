@@ -24,7 +24,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     email = widget.authService.getEmail();
 
-    userDB.getUserEntryFromEmailNew(email).then((result) {
+    userDB.getUserEntryFromEmail(email).then((result) {
       print("result: $result");
       setState(() {
         if (result != null) {
