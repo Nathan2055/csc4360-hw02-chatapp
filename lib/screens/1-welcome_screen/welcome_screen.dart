@@ -149,9 +149,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             );
           }
-
           // Display this while connecting to Firebase
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          else if (snapshot.connectionState == ConnectionState.waiting) {
             return Scaffold(
               body: Center(
                 child: SingleChildScrollView(
@@ -163,18 +162,23 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             );
           }
-
           // Display this if the user is not logged in yet
-          if (!snapshot.hasData) {
+          else if (!snapshot.hasData) {
             if (!loginSelected && !createAccountSelected) {
               return renderStartingScreen();
             } else {
               return renderAuthInterface();
             }
           }
-
           // Display this once the user is logged in
-          return ProfileScreen(emailAddress: widget.authService.getEmail());
+          else {
+            // Reset both display toggles so the welcome screen is shown again if the user logs out
+            setState(() {
+              loginSelected = false;
+              createAccountSelected = false;
+            });
+            return ProfileScreen(widget.authService);
+          }
         },
       ),
     );

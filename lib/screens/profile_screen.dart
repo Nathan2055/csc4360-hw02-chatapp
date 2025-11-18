@@ -1,12 +1,11 @@
 import 'package:chatapp/authservice.dart';
 import 'package:flutter/material.dart';
+import 'package:chatapp/models/user_entry.dart';
 
 class ProfileScreen extends StatefulWidget {
-  ProfileScreen({super.key, required this.emailAddress});
+  const ProfileScreen(this.authService, {super.key});
 
-  final String emailAddress;
-
-  final AuthService authService = AuthService();
+  final AuthService authService;
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -15,13 +14,26 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   void _logout() {
     widget.authService.logout();
-
-    print('are we logged in?');
-    print(widget.authService.isLoggedIn());
   }
 
   @override
   Widget build(BuildContext context) {
+    String finalInfo = '';
+    String finalEmail = '';
+
+    UserEntry? userinfo_test = widget.authService.getCurrentUserInfo();
+    if (userinfo_test != null) {
+      UserEntry userinfo = userinfo_test;
+      Map userinfo_map = userinfo.toMap();
+      String userinfo_string = userinfo_map.toString();
+      finalInfo = userinfo_string;
+      print(userinfo_string);
+    } else {
+      print('error: user info was null');
+    }
+
+    finalEmail = widget.authService.getEmail();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Profile Screen')),
       body: Center(
@@ -29,7 +41,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           padding: const EdgeInsets.all(64.0),
           child: Column(
             children: [
-              Text('Welcome! Your email is ${widget.emailAddress}'),
+              Text('Welcome! Your email is $finalEmail'),
+              SizedBox(height: 20),
+              Text('Other profile information:'),
+              SizedBox(height: 20),
+              Text(finalInfo),
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: _logout,
