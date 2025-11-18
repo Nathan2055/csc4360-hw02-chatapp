@@ -44,7 +44,7 @@ class UserEntry {
       firstName: data['firstName'],
       lastName: data['lastName'],
       role: data['role'],
-      registeredOn: data['registeredOn'].toDate(),
+      registeredOn: DateTime.parse(data['registeredOn']),
     );
   }
 }
