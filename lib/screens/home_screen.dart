@@ -23,92 +23,96 @@ class _HomeScreenState extends State<HomeScreen> {
 
   UserEntry? _userInfo;
   late String _email;
-  late String _userInfoString;
+  String? _userInfoString;
 
   @override
   void initState() {
     super.initState();
 
-    bool waitingForUserInfo = true;
-
     _email = widget.authService.getEmail();
 
     widget.dbHelper.getUserEntryFromEmail(_email).then((result) {
-      setState(() {
-        if (result != null) {
+      if (result != null) {
+        setState(() {
           _userInfo = result;
           _userInfoString = _userInfo!.toFirestore().toString();
-        }
-      });
+          _buildHomePlaceholder();
+        });
+      }
     });
 
-    while (waitingForUserInfo) {
-      if (_userInfo != null && _userInfoString != null) {
-        waitingForUserInfo = false;
-      }
-    }
+    _buildHomeScreenAppBar();
+    _buildHomePlaceholder();
+  }
 
-    homeScreenAppBar = AppBar(
-      title: const Text('Firebase Chat App'),
-      actions: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.home),
-          tooltip: 'Home',
-          onPressed: () {
-            setState(() {
-              _visibleScreen = 'home';
-            });
-          },
-        ),
-
-        IconButton(
-          icon: const Icon(Icons.person),
-          tooltip: 'Profile',
-          onPressed: () {
-            setState(() {
-              _visibleScreen = 'profile';
-            });
-          },
-        ),
-
-        IconButton(
-          icon: const Icon(Icons.settings),
-          tooltip: 'Settings',
-          onPressed: () {
-            setState(() {
-              _visibleScreen = 'settings';
-            });
-          },
-        ),
-      ],
-    );
-
-    _homePlaceholder = Column(
-      children: [
-        /*
-        (_visibleScreen == 'profile')
-            ? Text('Profile screen enabled')
-            : Container(),
-        (_visibleScreen == 'settings')
-            ? Text('Settings screen enabled')
-            : Container(),
-        (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
-        */
-        Text('Welcome! Your email is $_email'),
-        SizedBox(height: 20),
-        Text('Other profile information:'),
-        SizedBox(height: 20),
-        (_userInfoString != null) ? Text(_userInfoString) : Container(),
-        (_userInfoString != null) ? SizedBox(height: 20) : Container(),
-        ElevatedButton(
-          onPressed: _logout,
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('Log out')],
+  void _buildHomeScreenAppBar() {
+    setState(() {
+      homeScreenAppBar = AppBar(
+        title: const Text('Firebase Chat App'),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.home),
+            tooltip: 'Home',
+            onPressed: () {
+              setState(() {
+                _visibleScreen = 'home';
+              });
+            },
           ),
-        ),
-      ],
-    );
+
+          IconButton(
+            icon: const Icon(Icons.person),
+            tooltip: 'Profile',
+            onPressed: () {
+              setState(() {
+                _visibleScreen = 'profile';
+              });
+            },
+          ),
+
+          IconButton(
+            icon: const Icon(Icons.settings),
+            tooltip: 'Settings',
+            onPressed: () {
+              setState(() {
+                _visibleScreen = 'settings';
+              });
+            },
+          ),
+        ],
+      );
+    });
+  }
+
+  void _buildHomePlaceholder() {
+    setState(() {
+      _homePlaceholder = Column(
+        children: [
+          /*
+          (_visibleScreen == 'profile')
+              ? Text('Profile screen enabled')
+              : Container(),
+          (_visibleScreen == 'settings')
+              ? Text('Settings screen enabled')
+              : Container(),
+          (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
+          */
+          Text('Welcome! Your email is $_email'),
+          SizedBox(height: 20),
+          Text('Other profile information:'),
+          SizedBox(height: 20),
+          (_userInfoString != null) ? Text(_userInfoString!) : Container(),
+          (_userInfoString != null) ? SizedBox(height: 20) : Container(),
+          ElevatedButton(
+            onPressed: _logout,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Text('Log out')],
+            ),
+          ),
+        ],
+      );
+    });
   }
 
   void _logout() {
