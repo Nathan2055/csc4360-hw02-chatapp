@@ -29,17 +29,24 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+    bool waitingForUserInfo = true;
+
     _email = widget.authService.getEmail();
 
     widget.dbHelper.getUserEntryFromEmail(_email).then((result) {
       setState(() {
         if (result != null) {
           _userInfo = result;
+          _userInfoString = _userInfo!.toFirestore().toString();
         }
       });
     });
 
-    _userInfoString = _userInfo!.toFirestore().toString();
+    while (waitingForUserInfo) {
+      if (_userInfo != null && _userInfoString != null) {
+        waitingForUserInfo = false;
+      }
+    }
 
     homeScreenAppBar = AppBar(
       title: const Text('Firebase Chat App'),
