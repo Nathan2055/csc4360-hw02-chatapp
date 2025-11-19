@@ -3,6 +3,7 @@ import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
 import 'package:chatapp/screens/4-profile_screen/profile_screen.dart';
+import 'package:chatapp/screens/5-settings_screen/settings_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen(this.authService, this.dbHelper, {super.key});
@@ -121,7 +122,9 @@ class _HomeScreenState extends State<HomeScreen> {
           (_visibleScreen == 'profile')
               ? ProfileScreen(widget.authService, widget.dbHelper)
               : Container(),
-          (_visibleScreen == 'settings') ? _homePlaceholder : Container(),
+          (_visibleScreen == 'settings')
+              ? SettingsScreen(widget.authService, widget.dbHelper)
+              : Container(),
         ],
       );
     });
