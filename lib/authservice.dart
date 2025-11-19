@@ -55,7 +55,7 @@ class AuthService {
     }
   }
 
-  void updatePassword(String oldPassword, String newPassword) async {
+  Future<bool> updatePassword(String oldPassword, String newPassword) async {
     try {
       // Get the info for the current user
       User currentUser = FirebaseAuth.instance.currentUser!;
@@ -71,8 +71,11 @@ class AuthService {
 
       // Update the password
       await currentUser.updatePassword(newPassword);
+
+      return true;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
