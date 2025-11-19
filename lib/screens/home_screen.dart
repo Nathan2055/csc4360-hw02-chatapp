@@ -18,6 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
   late AppBar homeScreenAppBar;
 
   late Column _homePlaceholder;
+  late Column _homeColumn;
 
   String _visibleScreen = 'home';
 
@@ -36,13 +37,16 @@ class _HomeScreenState extends State<HomeScreen> {
         setState(() {
           _userInfo = result;
           _userInfoString = _userInfo!.toFirestore().toString();
+          _buildHomeScreenAppBar();
           _buildHomePlaceholder();
+          _buildHomeColumn();
         });
       }
     });
 
     _buildHomeScreenAppBar();
     _buildHomePlaceholder();
+    _buildHomeColumn();
   }
 
   void _buildHomeScreenAppBar() {
@@ -115,6 +119,20 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void _buildHomeColumn() {
+    setState(() {
+      _homeColumn = Column(
+        children: [
+          (_visibleScreen == 'home') ? _homePlaceholder : Container(),
+          (_visibleScreen == 'profile')
+              ? ProfileScreen(widget.authService, widget.dbHelper)
+              : Container(),
+          (_visibleScreen == 'settings') ? _homePlaceholder : Container(),
+        ],
+      );
+    });
+  }
+
   void _logout() {
     widget.authService.logout();
   }
@@ -126,15 +144,7 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
-          child: Column(
-            children: [
-              (_visibleScreen == 'home') ? _homePlaceholder : Container(),
-              (_visibleScreen == 'profile')
-                  ? ProfileScreen(widget.authService, widget.dbHelper)
-                  : Container(),
-              (_visibleScreen == 'settings') ? _homePlaceholder : Container(),
-            ],
-          ),
+          child: _homeColumn,
         ),
       ),
     );
