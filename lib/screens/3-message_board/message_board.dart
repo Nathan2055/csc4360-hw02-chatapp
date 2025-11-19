@@ -27,14 +27,9 @@ class MessageBoard extends StatefulWidget {
 class _MessageBoardState extends State<MessageBoard> {
   late AppBar homeScreenAppBar;
 
-  late Column _homePlaceholder;
   late Column _homeColumn;
 
-  String _visibleScreen = 'home';
-
-  UserEntry? _userInfo;
   late String _email;
-  String? _userInfoString;
 
   late Stream<QuerySnapshot> _chatStream;
   late StreamBuilder<QuerySnapshot> _chatStreamWidget;
@@ -55,21 +50,8 @@ class _MessageBoardState extends State<MessageBoard> {
 
     _email = widget.authService.getEmail();
 
-    widget.dbHelper.getUserEntryFromEmail(_email).then((result) {
-      if (result != null) {
-        setState(() {
-          _userInfo = result;
-          _userInfoString = _userInfo!.toFirestore().toString();
-          _buildHomeScreenAppBar();
-          _buildHomePlaceholder();
-          _buildHomeColumn();
-        });
-      }
-    });
-
-    _buildHomeScreenAppBar();
-    _buildHomePlaceholder();
-    _buildHomeColumn();
+    _buildChatStreamWidget();
+    _buildChatForm();
   }
 
   void _buildChatStreamWidget() {
@@ -210,7 +192,7 @@ class _MessageBoardState extends State<MessageBoard> {
 
     ChatEntry message = ChatEntry(
       message: _messageController.text,
-      userEmail: widget.authService.getEmail(),
+      userEmail: _email,
       createdAt: DateTime.now(),
     );
 
@@ -237,90 +219,6 @@ class _MessageBoardState extends State<MessageBoard> {
         // TODO: send error up the chain
       }
     }
-  }
-
-  void _buildHomeScreenAppBar() {
-    setState(() {
-      homeScreenAppBar = AppBar(
-        title: const Text('Firebase Chat App'),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.home),
-            tooltip: 'Home',
-            onPressed: () {
-              setState(() {
-                _visibleScreen = 'home';
-                _buildHomeColumn();
-              });
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.person),
-            tooltip: 'Profile',
-            onPressed: () {
-              setState(() {
-                _visibleScreen = 'profile';
-                _buildHomeColumn();
-              });
-            },
-          ),
-
-          IconButton(
-            icon: const Icon(Icons.settings),
-            tooltip: 'Settings',
-            onPressed: () {
-              setState(() {
-                _visibleScreen = 'settings';
-                _buildHomeColumn();
-              });
-            },
-          ),
-        ],
-      );
-    });
-  }
-
-  void _buildHomePlaceholder() {
-    setState(() {
-      _homePlaceholder = Column(
-        children: [
-          Text('Welcome! Your email is $_email'),
-          SizedBox(height: 20),
-          Text('Other profile information:'),
-          SizedBox(height: 20),
-          (_userInfoString != null) ? Text(_userInfoString!) : Container(),
-          (_userInfoString != null) ? SizedBox(height: 20) : Container(),
-          ElevatedButton(
-            onPressed: _logout,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('Log out')],
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
-  void _buildHomeColumn() {
-    setState(() {
-      _homeColumn = Column(
-        children: [
-          (_visibleScreen == 'home') ? _homePlaceholder : Container(),
-          (_visibleScreen == 'profile')
-              ? ProfileScreen(widget.authService, widget.dbHelper)
-              : Container(),
-          (_visibleScreen == 'settings')
-              ? SettingsScreen(widget.authService, widget.dbHelper)
-              : Container(),
-        ],
-      );
-    });
-  }
-
-  void _logout() {
-    widget.authService.logout();
   }
 
   @override
