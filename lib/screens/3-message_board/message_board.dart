@@ -152,9 +152,8 @@ class _MessageBoardState extends State<MessageBoard> {
                             .map((DocumentSnapshot document) {
                               Map<String, dynamic> data =
                                   document.data()! as Map<String, dynamic>;
-
-                              /*
                               ChatEntry message = ChatEntry.fromMap(data);
+
                               // Null/emptiness check
                               if (message.message == null ||
                                   message.userEmail == null ||
@@ -163,16 +162,11 @@ class _MessageBoardState extends State<MessageBoard> {
                                   message.userEmail == '') {
                                 return Container();
                               }
-                              */
-
-                              String username = _getUsernameFromEmailSync(
-                                data['userEmail'],
-                              );
 
                               return ListTile(
-                                title: Text(data['message']),
+                                title: Text(message.message!),
                                 subtitle: Text(
-                                  'Sent by $username at ${data['createdAt']}',
+                                  'Sent by ${message.userEmail!} at ${message.createdAt!.toString()}',
                                 ),
                               );
                             })
