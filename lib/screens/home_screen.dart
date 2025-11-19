@@ -95,15 +95,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _homePlaceholder = Column(
         children: [
-          /*
-          (_visibleScreen == 'profile')
-              ? Text('Profile screen enabled')
-              : Container(),
-          (_visibleScreen == 'settings')
-              ? Text('Settings screen enabled')
-              : Container(),
-          (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
-          */
           Text('Welcome! Your email is $_email'),
           SizedBox(height: 20),
           Text('Other profile information:'),
