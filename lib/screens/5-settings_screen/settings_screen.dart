@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
 import 'package:chatapp/screens/5-settings_screen/update_password_form.dart';
 
@@ -15,30 +14,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  UserEntry? userInfo;
-  late String email;
-
-  // TextStyle for titles
-  TextStyle titleTextStyle = const TextStyle(
-    fontSize: 22.0,
-    fontWeight: FontWeight.w400,
-  );
-
-  @override
-  void initState() {
-    super.initState();
-
-    email = widget.authService.getEmail();
-
-    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
-      setState(() {
-        if (result != null) {
-          userInfo = result;
-        }
-      });
-    });
-  }
-
   void _logout() {
     widget.authService.logout();
   }
@@ -50,12 +25,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(64.0),
         child: Column(
           children: [
-            Text('Update Password', style: titleTextStyle),
-            SizedBox(height: 20),
+            const Text(
+              'Update Password',
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+            ),
+            const SizedBox(height: 20),
             UpdatePasswordForm(widget.authService, widget.dbHelper),
-            SizedBox(height: 20),
-            Text('Log out', style: titleTextStyle),
-            SizedBox(height: 20),
+            const SizedBox(height: 40),
+            const Text(
+              'Log out',
+              style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w400),
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: _logout,
               child: const Row(
