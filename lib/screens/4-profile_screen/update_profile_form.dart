@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/models/user_entry.dart';
 
-// Create Account screen
-// Imported and shown on the welcome screen when the create account button is pressed
+// Update Profile form
 class UpdateProfileForm extends StatefulWidget {
   const UpdateProfileForm(this.authService, this.dbHelper, {super.key});
 
@@ -24,7 +23,9 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
   final TextEditingController _firstNameController = TextEditingController();
   final TextEditingController _lastNameController = TextEditingController();
 
-  UserEntry? userInfo;
+  // A copy of the current user's info, populated upon initialization
+  // This should only be null while the widget is loading
+  UserEntry? _userInfo;
 
   // Tracks status of submitted async update request
   // Either 'ready', 'pending', 'complete', or 'error'
@@ -39,40 +40,25 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     });
   }
 
+  // Get the current user's info from the database
+  // Once it's available, copy the existing values into the form, then copy
+  // the complete UserEntry into _userInfo
   void _loadUserInfo() {
     widget.dbHelper.getUserEntryFromEmail(widget.authService.getEmail()).then((
       result,
     ) {
       setState(() {
         if (result != null) {
-          _fillFormFields(result); // fill form fields before loading the widget
-          userInfo = result;
+          _usernameController.text = result.username!;
+          _firstNameController.text = result.firstName!;
+          _lastNameController.text = result.lastName!;
+          _userInfo = result;
         }
       });
     });
   }
 
-  void _fillFormFields(UserEntry initialInfo) {
-    setState(() {
-      _usernameController.text = initialInfo.username!;
-      _firstNameController.text = initialInfo.firstName!;
-      _lastNameController.text = initialInfo.lastName!;
-    });
-  }
-
-  /*
-  void _sendUpdate() async {
-    bool exitcode = await widget.dbHelper.updateUserProfile(emailID, newUsername, newFirstName, newLastName);
-  }
-  */
-
   void _submitForm() {
-    //String username = _usernameController.text;
-    //String firstName = _firstNameController.text;
-    //String lastName = _lastNameController.text;
-
-    //widget.dbHelper.updateUserProfile(emailID, newUsername, newFirstName, newLastName)
-
     // Hide interface, prepare to send update
     setState(() {
       _updateStatusCode = 'pending';
@@ -99,33 +85,22 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     // Wait for update to commit and then update status
     while (_updateStatusCode != 'ready') {
       if (_updateStatusCode == 'complete') {
-        // Reload interface on completion
+        // Reload entire interface upon completion to avoid desyncs
         setState(() {
-          userInfo = null;
+          _userInfo = null;
           _updateStatusCode = 'ready';
           _loadUserInfo();
         });
       } else if (_updateStatusCode == 'error') {
-        // TODO: send error
+        // TODO: send error up the chain
       }
     }
-
-    /*
-    widget.authService.createAccount(
-      emailAddress,
-      password,
-      username,
-      firstName,
-      lastName,
-    );
-
-    widget.authService.login(emailAddress, password);
-    */
   }
 
   @override
   Widget build(BuildContext context) {
-    if (userInfo != null) {
+    if (_userInfo != null) {
+      // Show form interface once the info is ready
       return Form(
         key: _formKey,
         child: Column(
@@ -180,8 +155,27 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
           ],
         ),
       );
+    } else if (_updateStatusCode != 'ready') {
+      // Show loading screen while the database commits
+      return Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(64.0),
+          child: Column(
+            children: [
+              Text(
+                'Loading...',
+                style: const TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
     }
 
+    // Show loading screen until the info is ready
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(64.0),
