@@ -1,38 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Representation of one chat posting
-// Includes an id, a message, a username, and a DateTime of posting
+// Includes an id, a message, a userEmail, and a DateTime of posting
 class ChatEntry {
-  final String id;
-  final String message;
-  final String username;
-  final DateTime createdAt;
+  // Chat entry fields
+  final String? id;
+  final String? message;
+  final String? userEmail;
+  final DateTime? createdAt;
 
-  ChatEntry({
-    required this.id,
-    required this.message,
-    required this.username,
-    required this.createdAt,
-  });
+  // Basic constructor
+  ChatEntry({this.id, this.message, this.userEmail, this.createdAt});
 
-  // Convert the item to a Firestore-compatible map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'message': message,
-      'username': username,
-      'createdAt': createdAt,
-    };
+  // Constructor from a Firestore DocumentSnapshot
+  factory ChatEntry.fromFirestore(
+    DocumentSnapshot<Map<String, dynamic>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    final data = snapshot.data();
+    return ChatEntry(
+      id: data?['id'],
+      message: data?['message'],
+      userEmail: data?['userEmail'],
+      createdAt: data?['registeredOn'] != null
+          ? DateTime.parse(data?['createdAt'])
+          : null,
+    );
   }
 
-  // Create an item from a Firestore document snapshot
-  factory ChatEntry.fromSnapshot(DocumentSnapshot snapshot) {
-    final data = snapshot.data() as Map<String, dynamic>;
+  // Constructor from a properly formatted Map<String, dynamic>
+  factory ChatEntry.fromMap(Map<String, dynamic> map) {
     return ChatEntry(
-      id: snapshot.id,
-      message: data['message'],
-      username: data['username'],
-      createdAt: data['createdAt'].toDate(),
+      id: map['id'],
+      message: map['message'],
+      userEmail: map['userEmail'],
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
+          : null,
     );
+  }
+
+  // Converter to a properly formatted Map<String, dynamic>
+  Map<String, dynamic> toFirestore() {
+    return {
+      if (id != null) "id": id,
+      if (message != null) "username": message,
+      if (userEmail != null) "username": userEmail,
+      if (createdAt != null) "registeredOn": createdAt.toString(),
+    };
   }
 }
