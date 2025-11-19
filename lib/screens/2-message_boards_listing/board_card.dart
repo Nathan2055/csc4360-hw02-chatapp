@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:chatapp/screens/2-message_boards_listing/zoom_animation.dart';
 
 class BoardCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
   final Color color;
-  final Widget targetScreen;
+  final Function target;
 
   const BoardCard({
     super.key,
@@ -14,7 +13,7 @@ class BoardCard extends StatelessWidget {
     required this.title,
     this.subtitle = '',
     required this.color,
-    required this.targetScreen,
+    required this.target,
   });
 
   @override
@@ -22,7 +21,7 @@ class BoardCard extends StatelessWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: () => ZoomAnimation().navigateWithZoom(context, targetScreen),
+          onTap: () => target,
           child: Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
@@ -38,8 +37,7 @@ class BoardCard extends StatelessWidget {
               color: color,
               borderRadius: BorderRadius.circular(16),
               child: InkWell(
-                onTap: () =>
-                    ZoomAnimation().navigateWithZoom(context, targetScreen),
+                onTap: () => target,
                 borderRadius: BorderRadius.circular(16),
                 child: Padding(
                   padding: const EdgeInsets.all(24),
