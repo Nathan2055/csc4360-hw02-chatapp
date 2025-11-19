@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/screens/2-message_boards_listing/message_boards_listing.dart';
 import 'package:chatapp/screens/4-profile_screen/profile_screen.dart';
 import 'package:chatapp/screens/5-settings_screen/settings_screen.dart';
 
@@ -16,43 +16,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late AppBar homeScreenAppBar;
+  late AppBar _homeScreenAppBar;
 
-  late Column _homePlaceholder;
   late Column _homeColumn;
 
   String _visibleScreen = 'home';
-
-  UserEntry? _userInfo;
-  late String _email;
-  String? _userInfoString;
 
   @override
   void initState() {
     super.initState();
 
-    _email = widget.authService.getEmail();
-
-    widget.dbHelper.getUserEntryFromEmail(_email).then((result) {
-      if (result != null) {
-        setState(() {
-          _userInfo = result;
-          _userInfoString = _userInfo!.toFirestore().toString();
-          _buildHomeScreenAppBar();
-          _buildHomePlaceholder();
-          _buildHomeColumn();
-        });
-      }
-    });
-
     _buildHomeScreenAppBar();
-    _buildHomePlaceholder();
     _buildHomeColumn();
   }
 
   void _buildHomeScreenAppBar() {
     setState(() {
-      homeScreenAppBar = AppBar(
+      _homeScreenAppBar = AppBar(
         title: const Text('Firebase Chat App'),
         actions: <Widget>[
           IconButton(
@@ -92,33 +72,13 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _buildHomePlaceholder() {
-    setState(() {
-      _homePlaceholder = Column(
-        children: [
-          Text('Welcome! Your email is $_email'),
-          SizedBox(height: 20),
-          Text('Other profile information:'),
-          SizedBox(height: 20),
-          (_userInfoString != null) ? Text(_userInfoString!) : Container(),
-          (_userInfoString != null) ? SizedBox(height: 20) : Container(),
-          ElevatedButton(
-            onPressed: _logout,
-            child: const Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Text('Log out')],
-            ),
-          ),
-        ],
-      );
-    });
-  }
-
   void _buildHomeColumn() {
     setState(() {
       _homeColumn = Column(
         children: [
-          (_visibleScreen == 'home') ? _homePlaceholder : Container(),
+          (_visibleScreen == 'home')
+              ? MessageBoardsListing(widget.authService, widget.dbHelper)
+              : Container(),
           (_visibleScreen == 'profile')
               ? ProfileScreen(widget.authService, widget.dbHelper)
               : Container(),
@@ -130,14 +90,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  void _logout() {
-    widget.authService.logout();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: homeScreenAppBar,
+      appBar: _homeScreenAppBar,
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
