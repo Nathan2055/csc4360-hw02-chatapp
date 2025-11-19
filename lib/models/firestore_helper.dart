@@ -143,6 +143,10 @@ class FirestoreHelper {
     }
   }
 
+  Stream<QuerySnapshot> getChatStream(String messageBoard) {
+    return _firestore.collection(messageBoard).snapshots();
+  }
+
   /*
   void addChatEntry(String collection, ChatEntry chatEntry) {
     try {
