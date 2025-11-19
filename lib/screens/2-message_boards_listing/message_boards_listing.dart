@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/screens/2-message_boards_listing/board_card.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/screens/3-message_board/message_board.dart';
 
 class MessageBoardsListing extends StatefulWidget {
   const MessageBoardsListing(this.authService, this.dbHelper, {super.key});
@@ -20,35 +20,114 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
     fontWeight: FontWeight.w400,
   );
 
+  String _visibleBoard = '';
+
+  void _displayBoard(String messageBoard) {
+    setState(() {
+      _visibleBoard = messageBoard;
+    });
+  }
+
+  Column _createBoardCard(
+    String title,
+    Color color,
+    IconData icon,
+    String targetBoard,
+  ) {
+    String subtitle = '';
+    return Column(
+      children: [
+        GestureDetector(
+          onTap: () => _displayBoard(targetBoard),
+          child: Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: color.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Material(
+              color: color,
+              borderRadius: BorderRadius.circular(16),
+              child: InkWell(
+                onTap: () => _displayBoard(targetBoard),
+                borderRadius: BorderRadius.circular(16),
+                child: Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(icon, size: 32, color: Colors.white),
+                      ),
+                      const SizedBox(width: 20),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              title,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle != ''
+                                ? const SizedBox(height: 4)
+                                : Container(),
+                            subtitle != ''
+                                ? Text(
+                                    subtitle,
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
+                                      fontSize: 14,
+                                    ),
+                                  )
+                                : Container(),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Column renderBoardsListing() {
     return Column(
       spacing: 24.0,
       children: [
         Text('Message Boards', style: titleTextStyle),
-        BoardCard(
-          icon: Icons.games,
-          title: 'Games',
-          color: Colors.orange,
-          targetScreen: Container(), // TODO: link out to board
+        _createBoardCard('Games', Colors.orange, Icons.games, 'games'),
+        _createBoardCard('Business', Colors.teal, Icons.show_chart, 'business'),
+        _createBoardCard(
+          'Public Health',
+          Colors.pinkAccent,
+          Icons.health_and_safety,
+          'health',
         ),
-        BoardCard(
-          icon: Icons.show_chart,
-          title: 'Business',
-          color: Colors.teal,
-          targetScreen: Container(), // TODO: link out to board
-        ),
-        BoardCard(
-          icon: Icons.health_and_safety,
-          title: 'Public Health',
-          color: Colors.pinkAccent,
-          targetScreen: Container(), // TODO: link out to board
-        ),
-        BoardCard(
-          icon: Icons.school,
-          title: 'Study',
-          color: Colors.purple,
-          targetScreen: Container(), // TODO: link out to board
-        ),
+        _createBoardCard('Study', Colors.purple, Icons.school, 'study'),
       ],
     );
   }
@@ -60,7 +139,13 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
-          child: renderBoardsListing(),
+          child: (_visibleBoard == '')
+              ? renderBoardsListing()
+              : MessageBoard(
+                  widget.authService,
+                  widget.dbHelper,
+                  _visibleBoard,
+                ),
         ),
       ),
     );
