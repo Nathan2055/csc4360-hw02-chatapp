@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/screens/5-settings_screen/update_password_form.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen(this.authService, this.dbHelper, {super.key});
@@ -14,11 +15,14 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // TODO: change password
-  // TODO: change email
-
   UserEntry? userInfo;
   late String email;
+
+  // TextStyle for titles
+  TextStyle titleTextStyle = const TextStyle(
+    fontSize: 22.0,
+    fontWeight: FontWeight.w400,
+  );
 
   @override
   void initState() {
@@ -49,6 +53,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
         padding: const EdgeInsets.all(64.0),
         child: Column(
           children: [
+            /*
+            Text('Your Profile Info', style: titleTextStyle),
+            */
+            Text('Update Password', style: titleTextStyle),
+            SizedBox(height: 20),
+            UpdatePasswordForm(widget.authService, widget.dbHelper),
+            SizedBox(height: 20),
+            Text('Log out', style: titleTextStyle),
+
             /*
             Text('Welcome! Your email is $email'),
             SizedBox(height: 20),
