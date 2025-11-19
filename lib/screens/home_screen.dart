@@ -60,6 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               setState(() {
                 _visibleScreen = 'home';
+                _buildHomeColumn();
               });
             },
           ),
@@ -70,6 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               setState(() {
                 _visibleScreen = 'profile';
+                _buildHomeColumn();
               });
             },
           ),
@@ -80,6 +82,7 @@ class _HomeScreenState extends State<HomeScreen> {
             onPressed: () {
               setState(() {
                 _visibleScreen = 'settings';
+                _buildHomeColumn();
               });
             },
           ),
