@@ -39,6 +39,14 @@ class _MessageBoardState extends State<MessageBoard> {
   late Stream<QuerySnapshot> _chatStream;
   late StreamBuilder<QuerySnapshot> _chatStreamWidget;
 
+  late Form _chatForm;
+  final TextEditingController _messageController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+
+  // Tracks status of submitted async update request
+  // Either 'ready', 'pending', 'complete', or 'error'
+  String _sendingMessage = 'ready';
+
   @override
   void initState() {
     super.initState();
@@ -158,6 +166,77 @@ class _MessageBoardState extends State<MessageBoard> {
     while (!complete) {}
 
     return username;
+  }
+
+  void _buildChatForm() {
+    _chatForm = Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 24.0,
+        children: [
+          // Username field
+          TextFormField(
+            enabled: (_sendingMessage == 'ready'),
+            controller: _messageController,
+            decoration: InputDecoration(
+              labelText: 'Chat Message',
+              prefixIcon: const Icon(Icons.message),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+          ),
+
+          // Submit button
+          ElevatedButton(
+            onPressed: (_sendingMessage != 'ready') ? null : _submitChatForm,
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Text('Send Message')],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _submitChatForm() {
+    // Lock interface, prepare to send update
+    setState(() {
+      _sendingMessage = 'pending';
+    });
+
+    ChatEntry message = ChatEntry(
+      message: _messageController.text,
+      userEmail: widget.authService.getEmail(),
+      createdAt: DateTime.now(),
+    );
+
+    // Send message and register function to update status on completion
+    widget.dbHelper.addChatEntry(widget.messageBoard, message).then((result) {
+      setState(() {
+        if (result) {
+          _sendingMessage = 'complete';
+        } else {
+          _sendingMessage = 'error';
+        }
+      });
+    });
+
+    // Wait for update to commit and then update status
+    while (_sendingMessage != 'ready') {
+      if (_sendingMessage == 'complete') {
+        // Reload entire interface upon completion to avoid desyncs
+        setState(() {
+          _messageController.text = '';
+          _sendingMessage = 'ready';
+        });
+      } else if (_sendingMessage == 'error') {
+        // TODO: send error up the chain
+      }
+    }
   }
 
   void _buildHomeScreenAppBar() {
