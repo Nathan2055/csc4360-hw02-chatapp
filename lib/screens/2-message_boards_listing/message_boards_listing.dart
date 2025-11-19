@@ -110,54 +110,47 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Firebase Chat App')),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(64.0),
-          child: (_visibleBoard == '')
-              ? Column(
-                  spacing: 24.0,
-                  children: [
-                    const Text(
-                      'Message Boards',
-                      style: TextStyle(
-                        fontSize: 22.0,
-                        fontWeight: FontWeight.w400,
-                      ),
+    return Center(
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(64.0),
+        child: (_visibleBoard == '')
+            ? Column(
+                spacing: 24.0,
+                children: [
+                  const Text(
+                    'Message Boards',
+                    style: TextStyle(
+                      fontSize: 22.0,
+                      fontWeight: FontWeight.w400,
                     ),
-                    _createBoardCard(
-                      'Games',
-                      Colors.orange,
-                      Icons.games,
-                      'games',
-                    ),
-                    _createBoardCard(
-                      'Business',
-                      Colors.teal,
-                      Icons.show_chart,
-                      'business',
-                    ),
-                    _createBoardCard(
-                      'Public Health',
-                      Colors.pinkAccent,
-                      Icons.health_and_safety,
-                      'health',
-                    ),
-                    _createBoardCard(
-                      'Study',
-                      Colors.purple,
-                      Icons.school,
-                      'study',
-                    ),
-                  ],
-                )
-              : MessageBoard(
-                  widget.authService,
-                  widget.dbHelper,
-                  _visibleBoard,
-                ),
-        ),
+                  ),
+                  _createBoardCard(
+                    'Games',
+                    Colors.orange,
+                    Icons.games,
+                    'games',
+                  ),
+                  _createBoardCard(
+                    'Business',
+                    Colors.teal,
+                    Icons.show_chart,
+                    'business',
+                  ),
+                  _createBoardCard(
+                    'Public Health',
+                    Colors.pinkAccent,
+                    Icons.health_and_safety,
+                    'health',
+                  ),
+                  _createBoardCard(
+                    'Study',
+                    Colors.purple,
+                    Icons.school,
+                    'study',
+                  ),
+                ],
+              )
+            : MessageBoard(widget.authService, widget.dbHelper, _visibleBoard),
       ),
     );
   }
