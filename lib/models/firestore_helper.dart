@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chatapp/models/user_entry.dart';
 
+// FirestoreHelper handles all interaction with the Cloud Firestore databases
 class FirestoreHelper {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final String collectionName = 'users';
 
+  // Adds a new user entry
   void addUserEntry(UserEntry user) {
     final docRef = _firestore
-        .collection(collectionName)
+        .collection('users')
         .withConverter(
           fromFirestore: UserEntry.fromFirestore,
           toFirestore: (UserEntry userEntry, options) =>
@@ -17,9 +19,10 @@ class FirestoreHelper {
     docRef.set(user);
   }
 
-  // Get the existing UserEntry from Firebase, convert it to a map,
-  // apply the profile updates, convert it back, and then save the result
-  // back to Firebase
+  // Updates an existing user entry's profile details by getting
+  // the existing UserEntry from Cloud Firestore, converting it to a map,
+  // applying the profile updates, converting it back to a map,
+  // and then saving the result back to Cloud Firestore
   Future<bool> updateUserProfile(
     String emailID,
     String newUsername,
@@ -42,7 +45,7 @@ class FirestoreHelper {
       });
 
       final docRef = _firestore
-          .collection(collectionName)
+          .collection('users')
           .withConverter(
             fromFirestore: UserEntry.fromFirestore,
             toFirestore: (UserEntry userEntry, options) =>
@@ -51,17 +54,17 @@ class FirestoreHelper {
           .doc(emailID);
       await docRef.set(newProfile);
 
-      // TODO: add an extra check here?
-
       return true;
     } catch (e) {
+      debugPrint(e.toString());
       return false;
     }
   }
 
+  // Gets a user entry from Cloud Firestore based on an email
   Future<UserEntry?> getUserEntryFromEmail(String email) async {
     final docRef = _firestore
-        .collection(collectionName)
+        .collection('users')
         .doc(email)
         .withConverter(
           fromFirestore: UserEntry.fromFirestore,
@@ -75,7 +78,7 @@ class FirestoreHelper {
   /*
   Stream<List<UserEntry>> getUserEntryStream() {
     return _firestore
-        .collection(collectionName)
+        .collection('users')
         .snapshots()
         .map(
           (snapshot) =>
@@ -84,13 +87,13 @@ class FirestoreHelper {
   }
 
   Stream<QuerySnapshot<Map<String, dynamic>>> getRawUserEntryStream() {
-    return _firestore.collection(collectionName).snapshots();
+    return _firestore.collection('users').snapshots();
   }
 
   void updateUserEntry(UserEntry userEntry) {
     try {
       _firestore
-          .collection(collectionName)
+          .collection('users')
           .doc(userEntry.id)
           .update(userEntry.toMap());
       debugPrint('UserEntry updated');
@@ -101,7 +104,7 @@ class FirestoreHelper {
 
   void updateUserEntryByID(String id, String name, double price) {
     try {
-      _firestore.collection(collectionName).doc(id).update({
+      _firestore.collection('users').doc(id).update({
         "name": name,
         "price": price,
       });
@@ -112,7 +115,7 @@ class FirestoreHelper {
 
   void deleteUserEntry(String id) {
     try {
-      _firestore.collection(collectionName).doc(id).delete();
+      _firestore.collection('users').doc(id).delete();
     } catch (e) {
       debugPrint('Error deleting item: $e');
     }
