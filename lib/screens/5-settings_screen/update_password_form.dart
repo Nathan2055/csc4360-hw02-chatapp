@@ -19,6 +19,7 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
   final _formKey = GlobalKey<FormState>();
 
   // Text field controllers
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _oldPasswordController = TextEditingController();
   final TextEditingController _newPasswordController = TextEditingController();
 
@@ -111,6 +112,19 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
           mainAxisSize: MainAxisSize.min,
           spacing: 24.0,
           children: [
+            // Email address field
+            // TODO: wait this should be a constant
+            TextFormField(
+              controller: _emailController,
+              decoration: InputDecoration(
+                labelText: 'Email Address',
+                prefixIcon: const Icon(Icons.email),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+
             // Old Password field
             TextFormField(
               controller: _oldPasswordController,
