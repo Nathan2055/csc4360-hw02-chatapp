@@ -19,10 +19,12 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
   final _formKey = GlobalKey<FormState>();
 
   // Text field controllers
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _oldPasswordController = TextEditingController();
+  final TextEditingController _newPasswordController = TextEditingController();
 
   // Track password visibility for the "show password" toggle
-  bool _isPasswordVisible = false;
+  bool _isOldPasswordVisible = false;
+  bool _isNewPasswordVisible = false;
 
   // A copy of the current user's info, populated upon initialization
   // This should only be null while the widget is loading
@@ -109,25 +111,50 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
           mainAxisSize: MainAxisSize.min,
           spacing: 24.0,
           children: [
-            // Password field
+            // Old Password field
             TextFormField(
-              controller: _passwordController,
-              obscureText: !_isPasswordVisible,
+              controller: _oldPasswordController,
+              obscureText: !_isOldPasswordVisible,
               decoration: InputDecoration(
-                labelText: 'Password',
+                labelText: 'Old Password',
                 prefixIcon: const Icon(Icons.lock),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible
+                    _isOldPasswordVisible
                         ? Icons.visibility
                         : Icons.visibility_off,
                   ),
                   onPressed: () {
                     setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
+                      _isOldPasswordVisible = !_isOldPasswordVisible;
+                    });
+                  },
+                ),
+              ),
+            ),
+
+            // New Password field
+            TextFormField(
+              controller: _newPasswordController,
+              obscureText: !_isNewPasswordVisible,
+              decoration: InputDecoration(
+                labelText: 'New Password',
+                prefixIcon: const Icon(Icons.lock),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    _isNewPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isNewPasswordVisible = !_isNewPasswordVisible;
                     });
                   },
                 ),
