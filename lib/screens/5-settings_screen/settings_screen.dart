@@ -31,7 +31,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     email = widget.authService.getEmail();
 
     widget.dbHelper.getUserEntryFromEmail(email).then((result) {
-      print("result: $result");
       setState(() {
         if (result != null) {
           userInfo = result;
@@ -46,30 +45,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //String userInfoString = userInfo!.toFirestore().toString();
-
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(64.0),
         child: Column(
           children: [
-            /*
-            Text('Your Profile Info', style: titleTextStyle),
-            */
             Text('Update Password', style: titleTextStyle),
             SizedBox(height: 20),
             UpdatePasswordForm(widget.authService, widget.dbHelper),
             SizedBox(height: 20),
             Text('Log out', style: titleTextStyle),
-
-            /*
-            Text('Welcome! Your email is $email'),
             SizedBox(height: 20),
-            Text('Other profile information:'),
-            SizedBox(height: 20),
-            (userInfoString != null) ? Text(user2) : Container(),
-            (userInfoString != null) ? SizedBox(height: 20) : Container(),
-            */
             ElevatedButton(
               onPressed: _logout,
               child: const Row(
