@@ -76,6 +76,32 @@ class AuthService {
     }
   }
 
+  // Firebase does not allow updating emails without handling
+  // email verification, which is beyond the scope of this homework
+  /*
+  void updateEmail(String newEmail, String password) async {
+    try {
+      // Get the info for the current user
+      User currentUser = FirebaseAuth.instance.currentUser!;
+      String oldEmail = currentUser.email!;
+
+      // Get a new AuthCredential
+      AuthCredential cred = EmailAuthProvider.credential(
+        email: oldEmail,
+        password: password,
+      );
+
+      // Reauthenticate the user
+      await currentUser.reauthenticateWithCredential(cred);
+
+      // Update the email address
+      await currentUser.verifyBeforeUpdateEmail(newEmail);
+    } catch (e) {
+      print(e);
+    }
+  }
+  */
+
   void logout() {
     print('signing out');
     try {
