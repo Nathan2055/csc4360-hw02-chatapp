@@ -55,11 +55,7 @@ class AuthService {
     }
   }
 
-  void updatePassword(
-    String emailAddress,
-    String oldPassword,
-    String newPassword,
-  ) async {
+  void updatePassword(String oldPassword, String newPassword) async {
     try {
       // Get the info for the current user
       User currentUser = FirebaseAuth.instance.currentUser!;
@@ -75,25 +71,6 @@ class AuthService {
 
       // Update the password
       await currentUser.updatePassword(newPassword);
-
-      /*
-      // Start by signing the user back in
-      UserCredential reauthcred = await _auth.signInWithEmailAndPassword(
-        email: emailAddress,
-        password: oldPassword,
-      );
-
-      // Get the User object from the reauthenticated UserCredential
-      User usertest = reauthcred.user!;
-      */
-
-      _auth.signInWithEmailAndPassword(email: emailAddress, password: password);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
     } catch (e) {
       print(e);
     }
