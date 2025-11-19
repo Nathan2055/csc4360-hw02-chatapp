@@ -77,7 +77,7 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
         children: [
           // Old Password field
           TextFormField(
-            enabled: (_updateStatusCode != 'ready'),
+            enabled: (_updateStatusCode == 'ready'),
             controller: _oldPasswordController,
             obscureText: !_isOldPasswordVisible,
             decoration: InputDecoration(
@@ -103,7 +103,7 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
 
           // New Password field
           TextFormField(
-            enabled: (_updateStatusCode != 'ready'),
+            enabled: (_updateStatusCode == 'ready'),
             controller: _newPasswordController,
             obscureText: !_isNewPasswordVisible,
             decoration: InputDecoration(
