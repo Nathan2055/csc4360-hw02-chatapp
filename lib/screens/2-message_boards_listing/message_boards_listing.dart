@@ -14,12 +14,6 @@ class MessageBoardsListing extends StatefulWidget {
 }
 
 class _MessageBoardsListingState extends State<MessageBoardsListing> {
-  // TextStyle for titles
-  TextStyle titleTextStyle = const TextStyle(
-    fontSize: 22.0,
-    fontWeight: FontWeight.w400,
-  );
-
   String _visibleBoard = '';
 
   void _displayBoard(String messageBoard) {
@@ -114,24 +108,6 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
     );
   }
 
-  Column renderBoardsListing() {
-    return Column(
-      spacing: 24.0,
-      children: [
-        Text('Message Boards', style: titleTextStyle),
-        _createBoardCard('Games', Colors.orange, Icons.games, 'games'),
-        _createBoardCard('Business', Colors.teal, Icons.show_chart, 'business'),
-        _createBoardCard(
-          'Public Health',
-          Colors.pinkAccent,
-          Icons.health_and_safety,
-          'health',
-        ),
-        _createBoardCard('Study', Colors.purple, Icons.school, 'study'),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -140,7 +116,42 @@ class _MessageBoardsListingState extends State<MessageBoardsListing> {
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(64.0),
           child: (_visibleBoard == '')
-              ? renderBoardsListing()
+              ? Column(
+                  spacing: 24.0,
+                  children: [
+                    const Text(
+                      'Message Boards',
+                      style: TextStyle(
+                        fontSize: 22.0,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                    _createBoardCard(
+                      'Games',
+                      Colors.orange,
+                      Icons.games,
+                      'games',
+                    ),
+                    _createBoardCard(
+                      'Business',
+                      Colors.teal,
+                      Icons.show_chart,
+                      'business',
+                    ),
+                    _createBoardCard(
+                      'Public Health',
+                      Colors.pinkAccent,
+                      Icons.health_and_safety,
+                      'health',
+                    ),
+                    _createBoardCard(
+                      'Study',
+                      Colors.purple,
+                      Icons.school,
+                      'study',
+                    ),
+                  ],
+                )
               : MessageBoard(
                   widget.authService,
                   widget.dbHelper,
