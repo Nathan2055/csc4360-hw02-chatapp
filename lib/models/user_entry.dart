@@ -41,14 +41,14 @@ class UserEntry {
 
   factory UserEntry.fromMap(Map<String, dynamic> map) {
     return UserEntry(
-      id: map?['id'],
-      username: map?['username'],
-      email: map?['email'],
-      firstName: map?['firstName'],
-      lastName: map?['lastName'],
-      role: map?['role'],
-      registeredOn: map?['registeredOn'] != null
-          ? DateTime.parse(map?['registeredOn'])
+      id: map['id'],
+      username: map['username'],
+      email: map['email'],
+      firstName: map['firstName'],
+      lastName: map['lastName'],
+      role: map['role'],
+      registeredOn: map['registeredOn'] != null
+          ? DateTime.parse(map['registeredOn'])
           : null,
     );
   }
