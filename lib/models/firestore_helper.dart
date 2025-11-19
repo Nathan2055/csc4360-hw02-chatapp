@@ -124,6 +124,24 @@ class FirestoreHelper {
   */
 
   // Chat functions start here
+  // Adds a new chat entry, returns a boolean for success
+  Future<bool> addChatEntry(String messageBoard, ChatEntry chatMessage) async {
+    try {
+      final docRef = _firestore
+          .collection(messageBoard)
+          .withConverter(
+            fromFirestore: ChatEntry.fromFirestore,
+            toFirestore: (ChatEntry chatMessage, options) =>
+                chatMessage.toFirestore(),
+          )
+          .doc();
+      await docRef.set(chatMessage);
+      return true;
+    } catch (e) {
+      debugPrint(e.toString());
+      return false;
+    }
+  }
 
   /*
   void addChatEntry(String collection, ChatEntry chatEntry) {
