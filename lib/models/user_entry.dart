@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Representation of one registered user
-// Includes an id, a username, a first name, a last name, a user role, and a DateTime of registration
+// Includes an id, a username, a first name, a last name, a user role,
+// and a DateTime of registration
 class UserEntry {
+  // User profile fields
   final String? id;
   final String? username;
   final String? email;
@@ -11,6 +13,7 @@ class UserEntry {
   final String? role;
   final DateTime? registeredOn;
 
+  // Basic constructor
   UserEntry({
     this.id,
     this.username,
@@ -21,6 +24,7 @@ class UserEntry {
     this.registeredOn,
   });
 
+  // Constructor from a Firestore DocumentSnapshot
   factory UserEntry.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
@@ -39,6 +43,7 @@ class UserEntry {
     );
   }
 
+  // Constructor from a properly formatted Map<String, dynamic>
   factory UserEntry.fromMap(Map<String, dynamic> map) {
     return UserEntry(
       id: map['id'],
@@ -53,6 +58,7 @@ class UserEntry {
     );
   }
 
+  // Converter to a properly formatted Map<String, dynamic>
   Map<String, dynamic> toFirestore() {
     return {
       if (id != null) "id": id,
