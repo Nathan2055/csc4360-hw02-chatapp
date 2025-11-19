@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/screens/4-profile_screen/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen(this.authService, this.dbHelper, {super.key});
@@ -14,16 +15,31 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  AppBar homeScreenAppBar = AppBar(title: const Text('Firebase Chat App'));
+  late AppBar homeScreenAppBar;
+
+  late Column _homePlaceholder;
 
   String _visibleScreen = 'home';
 
-  UserEntry? userInfo;
-  late String email;
+  UserEntry? _userInfo;
+  late String _email;
+  late String _userInfoString;
 
   @override
   void initState() {
     super.initState();
+
+    _email = widget.authService.getEmail();
+
+    widget.dbHelper.getUserEntryFromEmail(_email).then((result) {
+      setState(() {
+        if (result != null) {
+          _userInfo = result;
+        }
+      });
+    });
+
+    _userInfoString = _userInfo!.toFirestore().toString();
 
     homeScreenAppBar = AppBar(
       title: const Text('Firebase Chat App'),
@@ -60,16 +76,32 @@ class _HomeScreenState extends State<HomeScreen> {
       ],
     );
 
-    email = widget.authService.getEmail();
-
-    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
-      print("result: $result");
-      setState(() {
-        if (result != null) {
-          userInfo = result;
-        }
-      });
-    });
+    _homePlaceholder = Column(
+      children: [
+        /*
+        (_visibleScreen == 'profile')
+            ? Text('Profile screen enabled')
+            : Container(),
+        (_visibleScreen == 'settings')
+            ? Text('Settings screen enabled')
+            : Container(),
+        (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
+        */
+        Text('Welcome! Your email is $_email'),
+        SizedBox(height: 20),
+        Text('Other profile information:'),
+        SizedBox(height: 20),
+        (_userInfoString != null) ? Text(_userInfoString) : Container(),
+        (_userInfoString != null) ? SizedBox(height: 20) : Container(),
+        ElevatedButton(
+          onPressed: _logout,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('Log out')],
+          ),
+        ),
+      ],
+    );
   }
 
   void _logout() {
@@ -78,8 +110,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    String userInfoString = userInfo!.toFirestore().toString();
-
     return Scaffold(
       appBar: homeScreenAppBar,
       body: Center(
@@ -87,26 +117,11 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(64.0),
           child: Column(
             children: [
+              (_visibleScreen == 'home') ? _homePlaceholder : Container(),
               (_visibleScreen == 'profile')
-                  ? Text('Profile screen enabled')
+                  ? ProfileScreen(widget.authService, widget.dbHelper)
                   : Container(),
-              (_visibleScreen == 'settings')
-                  ? Text('Settings screen enabled')
-                  : Container(),
-              (_visibleScreen != 'home') ? SizedBox(height: 20) : Container(),
-              Text('Welcome! Your email is $email'),
-              SizedBox(height: 20),
-              Text('Other profile information:'),
-              SizedBox(height: 20),
-              (userInfoString != null) ? Text(userInfoString) : Container(),
-              (userInfoString != null) ? SizedBox(height: 20) : Container(),
-              ElevatedButton(
-                onPressed: _logout,
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Text('Log out')],
-                ),
-              ),
+              (_visibleScreen == 'settings') ? _homePlaceholder : Container(),
             ],
           ),
         ),
