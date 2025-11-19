@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:chatapp/authservice.dart';
-import 'package:chatapp/models/user_entry.dart';
 import 'package:chatapp/models/firestore_helper.dart';
+import 'package:chatapp/screens/4-profile_screen/update_profile_form.dart';
 
+// Profile Screen
+// Displays the Update Profile form
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen(this.authService, this.dbHelper, {super.key});
 
@@ -14,55 +16,12 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  UserEntry? userInfo;
-  late String email;
-
-  @override
-  void initState() {
-    super.initState();
-
-    email = widget.authService.getEmail();
-
-    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
-      print("result: $result");
-      setState(() {
-        if (result != null) {
-          userInfo = result;
-        }
-      });
-    });
-  }
-
-  void _logout() {
-    widget.authService.logout();
-  }
-
   @override
   Widget build(BuildContext context) {
-    //String userInfoString = userInfo!.toFirestore().toString();
-
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(64.0),
-        child: Column(
-          children: [
-            /*
-            Text('Welcome! Your email is $email'),
-            SizedBox(height: 20),
-            Text('Other profile information:'),
-            SizedBox(height: 20),
-            (userInfoString != null) ? Text(user2) : Container(),
-            (userInfoString != null) ? SizedBox(height: 20) : Container(),
-            */
-            ElevatedButton(
-              onPressed: _logout,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Text('Log out')],
-              ),
-            ),
-          ],
-        ),
+        child: UpdateProfileForm(widget.authService, widget.dbHelper),
       ),
     );
   }
