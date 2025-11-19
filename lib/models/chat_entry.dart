@@ -44,9 +44,9 @@ class ChatEntry {
   Map<String, dynamic> toFirestore() {
     return {
       if (id != null) "id": id,
-      if (message != null) "username": message,
-      if (userEmail != null) "username": userEmail,
-      if (createdAt != null) "registeredOn": createdAt.toString(),
+      if (message != null) "message": message,
+      if (userEmail != null) "userEmail": userEmail,
+      if (createdAt != null) "createdAt": createdAt.toString(),
     };
   }
 }

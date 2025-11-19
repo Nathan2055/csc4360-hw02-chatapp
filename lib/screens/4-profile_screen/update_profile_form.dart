@@ -58,29 +58,29 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     });
   }
 
-  void _submitForm() {
+  void _submitForm() async {
     // Hide interface, prepare to send update
     setState(() {
       _updateStatusCode = 'pending';
     });
 
     // Send update and register function to update status on completion
-    widget.dbHelper
-        .updateUserProfile(
-          widget.authService.getEmail(),
-          _usernameController.text,
-          _firstNameController.text,
-          _lastNameController.text,
-        )
-        .then((result) {
-          setState(() {
-            if (result) {
-              _updateStatusCode = 'complete';
-            } else {
-              _updateStatusCode = 'error';
-            }
-          });
-        });
+    bool result = await widget.dbHelper.updateUserProfile(
+      widget.authService.getEmail(),
+      _usernameController.text,
+      _firstNameController.text,
+      _lastNameController.text,
+    );
+
+    if (result) {
+      setState(() {
+        _updateStatusCode = 'complete';
+      });
+    } else {
+      setState(() {
+        _updateStatusCode = 'error';
+      });
+    }
 
     // Wait for update to commit and then update status
     while (_updateStatusCode != 'ready') {

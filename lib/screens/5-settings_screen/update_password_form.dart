@@ -29,27 +29,27 @@ class _UpdatePasswordFormState extends State<UpdatePasswordForm> {
   // Either 'ready', 'pending', 'complete', or 'error'
   String _updateStatusCode = 'ready';
 
-  void _submitForm() {
+  void _submitForm() async {
     // Lock form, prepare to send update
     setState(() {
       _updateStatusCode = 'pending';
     });
 
     // Send request to update password
-    widget.authService
-        .updatePassword(
-          _oldPasswordController.text,
-          _newPasswordController.text,
-        )
-        .then((result) {
-          setState(() {
-            if (result) {
-              _updateStatusCode = 'complete';
-            } else {
-              _updateStatusCode = 'error';
-            }
-          });
-        });
+    bool result = await widget.authService.updatePassword(
+      _oldPasswordController.text,
+      _newPasswordController.text,
+    );
+
+    if (result) {
+      setState(() {
+        _updateStatusCode = 'complete';
+      });
+    } else {
+      setState(() {
+        _updateStatusCode = 'error';
+      });
+    }
 
     // Wait for update to commit and then clear and unlock form
     while (_updateStatusCode != 'ready') {

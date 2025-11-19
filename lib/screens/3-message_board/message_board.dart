@@ -3,6 +3,7 @@ import 'package:chatapp/authservice.dart';
 import 'package:chatapp/models/firestore_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:chatapp/models/chat_entry.dart';
+import 'package:chatapp/models/user_entry.dart';
 
 class MessageBoard extends StatefulWidget {
   const MessageBoard(
@@ -40,21 +41,27 @@ class _MessageBoardState extends State<MessageBoard> {
     _email = widget.authService.getEmail();
   }
 
-  String _getUsernameFromEmail(String email) {
+  Future<String> _getUsernameFromEmail(String email) async {
+    String username = '';
+
+    UserEntry? result = await widget.dbHelper.getUserEntryFromEmail(email);
+
+    if (result != null) {
+      if (result.username != null) {
+        username = result.username!;
+      }
+    }
+
+    return username;
+  }
+
+  String _getUsernameFromEmailSync(String email) {
     bool complete = false;
     String username = '';
 
-    widget.dbHelper.getUserEntryFromEmail(email).then((result) {
-      if (result != null) {
-        if (result.username != null) {
-          username = result.username!;
-          complete = true;
-        } else {
-          complete = true;
-        }
-      } else {
-        complete = true;
-      }
+    _getUsernameFromEmail(email).then((result) {
+      complete = true;
+      username = result;
     });
 
     while (!complete) {}
@@ -62,7 +69,7 @@ class _MessageBoardState extends State<MessageBoard> {
     return username;
   }
 
-  void _submitChatForm() {
+  void _submitChatForm() async {
     // Lock interface, prepare to send update
     setState(() {
       _sendingMessage = 'pending';
@@ -75,15 +82,20 @@ class _MessageBoardState extends State<MessageBoard> {
     );
 
     // Send message and register function to update status on completion
-    widget.dbHelper.addChatEntry(widget.messageBoard, message).then((result) {
+    bool result = await widget.dbHelper.addChatEntry(
+      widget.messageBoard,
+      message,
+    );
+
+    if (result) {
       setState(() {
-        if (result) {
-          _sendingMessage = 'complete';
-        } else {
-          _sendingMessage = 'error';
-        }
+        _sendingMessage = 'complete';
       });
-    });
+    } else {
+      setState(() {
+        _sendingMessage = 'error';
+      });
+    }
 
     // Wait for update to commit and then update status
     while (_sendingMessage != 'ready') {
@@ -101,111 +113,113 @@ class _MessageBoardState extends State<MessageBoard> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(64.0),
-        child: Column(
-          children: [
-            // Chat message stream
-            StreamBuilder<QuerySnapshot>(
-              stream: _chatStream,
-              builder:
-                  (
-                    BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot,
-                  ) {
-                    if (snapshot.hasError) {
-                      return const Text(
-                        'Something went wrong',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w400,
-                        ),
+    return Column(
+      children: [
+        SingleChildScrollView(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              // Chat message stream
+              StreamBuilder<QuerySnapshot>(
+                stream: _chatStream,
+                builder:
+                    (
+                      BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot,
+                    ) {
+                      if (snapshot.hasError) {
+                        return const Text(
+                          'Something went wrong',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        );
+                      }
+
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Text(
+                          'Loading',
+                          style: TextStyle(
+                            fontSize: 22.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        );
+                      }
+
+                      return ListView(
+                        shrinkWrap: true,
+                        children: snapshot.data!.docs
+                            .map((DocumentSnapshot document) {
+                              Map<String, dynamic> data =
+                                  document.data()! as Map<String, dynamic>;
+
+                              /*
+                              ChatEntry message = ChatEntry.fromMap(data);
+                              // Null/emptiness check
+                              if (message.message == null ||
+                                  message.userEmail == null ||
+                                  message.createdAt == null ||
+                                  message.message == '' ||
+                                  message.userEmail == '') {
+                                return Container();
+                              }
+                              */
+
+                              String username = _getUsernameFromEmailSync(
+                                data['userEmail'],
+                              );
+
+                              return ListTile(
+                                title: Text(data['message']),
+                                subtitle: Text(
+                                  'Sent by $username at ${data['createdAt']}',
+                                ),
+                              );
+                            })
+                            .toList()
+                            .cast(),
                       );
-                    }
-
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Text(
-                        'Loading',
-                        style: TextStyle(
-                          fontSize: 22.0,
-                          fontWeight: FontWeight.w400,
-                        ),
-                      );
-                    }
-
-                    return ListView(
-                      children: snapshot.data!.docs
-                          .map((DocumentSnapshot document) {
-                            Map<String, dynamic> data =
-                                document.data()! as Map<String, dynamic>;
-                            ChatEntry message = ChatEntry.fromMap(data);
-
-                            // Null/emptiness check
-                            if (message.message == null ||
-                                message.userEmail == null ||
-                                message.createdAt == null ||
-                                message.message == '' ||
-                                message.userEmail == '') {
-                              return Container();
-                            }
-
-                            String username = _getUsernameFromEmail(
-                              message.userEmail!,
-                            );
-
-                            return ListTile(
-                              title: Text(message.message!),
-                              subtitle: Text(
-                                'Sent by $username at ${message.createdAt!.toString()}',
-                              ),
-                            );
-                          })
-                          .toList()
-                          .cast(),
-                    );
-                  },
-            ),
-
-            SizedBox(height: 20.0),
-
-            // Chat message form
-            Form(
-              key: _formKey,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
-                spacing: 24.0,
-                children: [
-                  // Username field
-                  TextFormField(
-                    enabled: (_sendingMessage == 'ready'),
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      labelText: 'Chat Message',
-                      prefixIcon: const Icon(Icons.message),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                  ),
-
-                  // Submit button
-                  ElevatedButton(
-                    onPressed: (_sendingMessage != 'ready')
-                        ? null
-                        : _submitChatForm,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Text('Send Message')],
-                    ),
-                  ),
-                ],
+                    },
               ),
-            ),
-          ],
         ),
-      ),
+
+        SizedBox(height: 20.0),
+
+        // Chat message form
+        Form(
+          key: _formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            spacing: 24.0,
+            children: [
+              // Username field
+              TextFormField(
+                enabled: (_sendingMessage == 'ready'),
+                controller: _messageController,
+                decoration: InputDecoration(
+                  labelText: 'Chat Message',
+                  prefixIcon: const Icon(Icons.message),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
+
+              // Submit button
+              ElevatedButton(
+                onPressed: (_sendingMessage != 'ready')
+                    ? null
+                    : _submitChatForm,
+                child: const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Text('Send Message')],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
