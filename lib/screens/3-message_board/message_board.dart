@@ -115,39 +115,21 @@ class _MessageBoardState extends State<MessageBoard> {
                     AsyncSnapshot<QuerySnapshot> snapshot,
                   ) {
                     if (snapshot.hasError) {
-                      return Center(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(64.0),
-                          child: Column(
-                            children: [
-                              const Text(
-                                'Something went wrong',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
+                      return const Text(
+                        'Something went wrong',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.w400,
                         ),
                       );
                     }
 
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(64.0),
-                          child: Column(
-                            children: [
-                              const Text(
-                                'Loading',
-                                style: TextStyle(
-                                  fontSize: 22.0,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          ),
+                      return const Text(
+                        'Loading',
+                        style: TextStyle(
+                          fontSize: 22.0,
+                          fontWeight: FontWeight.w400,
                         ),
                       );
                     }
