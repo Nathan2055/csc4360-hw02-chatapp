@@ -26,6 +26,10 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
 
   UserEntry? userInfo;
 
+  // Tracks status of submitted async update request
+  // Either 'ready', 'pending', 'complete', or 'error'
+  String _updateStatusCode = 'ready';
+
   @override
   void initState() {
     super.initState();
@@ -56,10 +60,55 @@ class _UpdateProfileFormState extends State<UpdateProfileForm> {
     });
   }
 
+  /*
+  void _sendUpdate() async {
+    bool exitcode = await widget.dbHelper.updateUserProfile(emailID, newUsername, newFirstName, newLastName);
+  }
+  */
+
   void _submitForm() {
-    String username = _usernameController.text;
-    String firstName = _firstNameController.text;
-    String lastName = _lastNameController.text;
+    //String username = _usernameController.text;
+    //String firstName = _firstNameController.text;
+    //String lastName = _lastNameController.text;
+
+    //widget.dbHelper.updateUserProfile(emailID, newUsername, newFirstName, newLastName)
+
+    // Hide interface, prepare to send update
+    setState(() {
+      _updateStatusCode = 'pending';
+    });
+
+    // Send update and register function to update status on completion
+    widget.dbHelper
+        .updateUserProfile(
+          widget.authService.getEmail(),
+          _usernameController.text,
+          _firstNameController.text,
+          _lastNameController.text,
+        )
+        .then((result) {
+          setState(() {
+            if (result) {
+              _updateStatusCode = 'complete';
+            } else {
+              _updateStatusCode = 'error';
+            }
+          });
+        });
+
+    // Wait for update to commit and then update status
+    while (_updateStatusCode != 'ready') {
+      if (_updateStatusCode == 'complete') {
+        // Reload interface on completion
+        setState(() {
+          userInfo = null;
+          _updateStatusCode = 'ready';
+          _loadUserInfo();
+        });
+      } else if (_updateStatusCode == 'error') {
+        // TODO: send error
+      }
+    }
 
     /*
     widget.authService.createAccount(
